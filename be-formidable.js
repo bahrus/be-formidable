@@ -5,6 +5,8 @@ export class BeFormidable {
     intro(proxy, target, beDecorProps) {
         this.#target = target;
     }
+    onInvalidIf(self) {
+    }
 }
 const tagName = 'be-formidable';
 const ifWantsToBe = 'formidable';
@@ -15,6 +17,10 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
+            virtualProps: ['invalidIf'],
+        },
+        actions: {
+            onInvalidIf: 'invalidIf',
         }
     },
     complexPropDefaults: {

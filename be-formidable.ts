@@ -6,6 +6,8 @@ export class BeFormidable implements BeFormidableActions{
     #target!: HTMLFormElement;
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         this.#target = target;
+    }
+    onInvalidIf(self: this): void{
     } 
 }
 
@@ -23,6 +25,10 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
         propDefaults:{
             upgrade,
             ifWantsToBe,
+            virtualProps: ['invalidIf'],
+        },
+        actions:{
+            onInvalidIf: 'invalidIf',
         }
     },
     complexPropDefaults:{

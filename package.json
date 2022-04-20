@@ -1,8 +1,28 @@
 {
   "name": "be-formidable",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "decorate",
+    "behavior",
+    "directive",
+    "forms",
+    "validation"
+  ],
+  "description": "Add additional validations on form element beyond those that can be specified on an individual field level.",
+  "main": "be-formidable.js",
+  "module": "be-formidable.js",
+  "exports": {
+    ".": "./be-formidable.js",
+    "./be-formidable.js": "./be-formidable.js"
+  },
+  "files":[
+    "*.*"
+  ],
+  "types": "types.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node node_modules/xtal-test/serve.js",
@@ -20,7 +40,7 @@
     "type": "git",
     "url": "git+https://github.com/bahrus/be-formidable.git"
   },
-  "author": "",
+  "author": "Bruce Anderson <anderson.bruce.b@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/be-formidable/issues"

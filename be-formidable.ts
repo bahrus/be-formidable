@@ -3,9 +3,7 @@ import {BeFormidableActions, BeFormidableProps, BeFormidableVirtualProps} from '
 import {register} from 'be-hive/register.js';
 
 export class BeFormidable implements BeFormidableActions{
-    //#target!: HTMLFormElement;
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
-        //this.#target = target;
         const checkValidity = target.checkValidity;
         const boundCheckValidity = checkValidity.bind(target);
         target.checkValidity = () => {
@@ -21,8 +19,6 @@ export class BeFormidable implements BeFormidableActions{
                 if(name === undefined) continue;
                 if(noneOf.includes(name)){
                     if(inputT.value) {
-                        //const internals = target.attachInternals();
-                        
                         return true;
                     }
                 }
@@ -30,8 +26,7 @@ export class BeFormidable implements BeFormidableActions{
             return false;
         }
     }
-    // onInvalidIf(self: this): void{
-    // } 
+
 }
 
 export interface BeFormidable extends BeFormidableProps{}

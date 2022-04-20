@@ -1,9 +1,7 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export class BeFormidable {
-    //#target!: HTMLFormElement;
     intro(proxy, target, beDecorProps) {
-        //this.#target = target;
         const checkValidity = target.checkValidity;
         const boundCheckValidity = checkValidity.bind(target);
         target.checkValidity = () => {
@@ -23,7 +21,6 @@ export class BeFormidable {
                     continue;
                 if (noneOf.includes(name)) {
                     if (inputT.value) {
-                        //const internals = target.attachInternals();
                         return true;
                     }
                 }

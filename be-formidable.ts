@@ -7,11 +7,11 @@ export class BeFormidable implements BeFormidableActions{
         const checkValidity = target.checkValidity;
         const boundCheckValidity = checkValidity.bind(target);
         target.checkValidity = () => {
-            if(!boundCheckValidity()) return false;
+            if(!boundCheckValidity()) return this.markStatus(target, false);
             const {invalidIf} = this.proxy;
-            if(invalidIf === undefined) return true;
+            if(invalidIf === undefined) return this.markStatus(target, true);
             const {noneOf} = invalidIf;
-            if(noneOf === undefined) return true;
+            if(noneOf === undefined) return this.markStatus(target, true);
             const elements = target.elements;
             for(const input of elements){
                 const inputT = input as HTMLInputElement;
@@ -19,12 +19,24 @@ export class BeFormidable implements BeFormidableActions{
                 if(name === undefined) continue;
                 if(noneOf.includes(name)){
                     if(inputT.value) {
-                        return true;
+                        
+                        return this.markStatus(target, true);
                     }
                 }
             }
-            return false;
+            return this.markStatus(target, false);
         }
+    }
+
+    markStatus(target:HTMLFormElement, status: boolean){
+        if(status){
+            target.classList.remove('invalid');
+            target.classList.add('valid');
+        }else{
+            target.classList.remove('valid');
+            target.classList.add('invalid');
+        }
+        return status;
     }
 
 }

@@ -6,13 +6,13 @@ export class BeFormidable {
         const boundCheckValidity = checkValidity.bind(target);
         target.checkValidity = () => {
             if (!boundCheckValidity())
-                return false;
+                return this.markStatus(target, false);
             const { invalidIf } = this.proxy;
             if (invalidIf === undefined)
-                return true;
+                return this.markStatus(target, true);
             const { noneOf } = invalidIf;
             if (noneOf === undefined)
-                return true;
+                return this.markStatus(target, true);
             const elements = target.elements;
             for (const input of elements) {
                 const inputT = input;
@@ -21,12 +21,23 @@ export class BeFormidable {
                     continue;
                 if (noneOf.includes(name)) {
                     if (inputT.value) {
-                        return true;
+                        return this.markStatus(target, true);
                     }
                 }
             }
-            return false;
+            return this.markStatus(target, false);
         };
+    }
+    markStatus(target, status) {
+        if (status) {
+            target.classList.remove('invalid');
+            target.classList.add('valid');
+        }
+        else {
+            target.classList.remove('valid');
+            target.classList.add('invalid');
+        }
+        return status;
     }
 }
 const tagName = 'be-formidable';

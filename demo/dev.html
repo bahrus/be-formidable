@@ -21,10 +21,10 @@
         <input name=file id=file type=file>
     </form>
     <style>
-        form:invalid {
+        form:invalid, form[is-formidable].invalid {
             border: 5px solid red;
         }
-        form:valid {
+        form:valid, form[is-formidable].valid {
             border: 5px solid green;
         }
     </style>

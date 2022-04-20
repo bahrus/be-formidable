@@ -7,20 +7,24 @@ export class BeFormidable implements BeFormidableActions{
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         //this.#target = target;
         const checkValidity = target.checkValidity;
-        const boundCheckValidity = checkValidity.bind(proxy);
+        const boundCheckValidity = checkValidity.bind(target);
         target.checkValidity = () => {
             if(!boundCheckValidity()) return false;
             const {invalidIf} = this.proxy;
             if(invalidIf === undefined) return true;
-            const {allOf} = invalidIf;
-            if(allOf === undefined) return true;
+            const {noneOf} = invalidIf;
+            if(noneOf === undefined) return true;
             const elements = target.elements;
             for(const input of elements){
                 const inputT = input as HTMLInputElement;
                 const name = inputT.name;
                 if(name === undefined) continue;
-                if(allOf.includes(name)){
-                    if(!inputT.value) return false;
+                if(noneOf.includes(name)){
+                    if(inputT.value) {
+                        //const internals = target.attachInternals();
+                        
+                        return true;
+                    }
                 }
             }
             return false;
@@ -45,6 +49,7 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
             upgrade,
             ifWantsToBe,
             virtualProps: ['invalidIf'],
+            intro: 'intro'
         },
         actions:{
             //onInvalidIf: 'invalidIf',

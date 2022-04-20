@@ -2,7 +2,7 @@ import {BeDecoratedProps} from 'be-decorated/types';
 
 export interface BeFormidableVirtualProps{
     invalidIf:{
-        allOf: string[];
+        noneOf: string[];
     }
 }
 

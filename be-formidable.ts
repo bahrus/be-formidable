@@ -15,7 +15,7 @@ export class BeFormidable implements BeFormidableActions{
             const elements = target.elements;
             for(const input of elements){
                 const inputT = input as HTMLInputElement;
-                const name = inputT.name;
+                const name = inputT.name || inputT.id;
                 if(name === undefined) continue;
                 if(noneOf.includes(name)){
                     if(inputT.value) {

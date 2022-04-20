@@ -1,6 +1,6 @@
 {
   "name": "be-formidable",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "keywords": [
     "web-components",
     "web-component",
@@ -19,7 +19,7 @@
     ".": "./be-formidable.js",
     "./be-formidable.js": "./be-formidable.js"
   },
-  "files":[
+  "files": [
     "*.*"
   ],
   "types": "types.d.ts",

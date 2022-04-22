@@ -1,12 +1,15 @@
-# be-formidable
+# be-formidable [TODO]
 
 Add additional validations on form element beyond those that can be specified on an individual field level.
 
 ```html
 <form be-formidable='{
-    "invalidIf":{
-        "noneOf": ["url", "file"]
-    }
+    "invalidIf":[
+        {
+            "noneOf": ["url", "file"],
+            "message": "Select a url or a file"
+        }
+    ]
 }'>
 <label>
     URL:
@@ -17,6 +20,15 @@ Add additional validations on form element beyond those that can be specified on
     <input name=file id=file type=file>
 </form>
 ```
+
+[TODO]
+
+1.  Make noneOf derivavable from other elements like the host.
+
+
+
+
+
 
 Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.
 

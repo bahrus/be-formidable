@@ -6,6 +6,10 @@ export interface BeFormidableVirtualProps{
     }
 }
 
+export interface FormCriteria{
+    invalidIf: string[]
+}
+
 export interface BeFormidableProps extends BeFormidableVirtualProps{
     proxy: HTMLFormElement & BeFormidableVirtualProps;
 }

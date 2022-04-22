@@ -23,7 +23,7 @@ Add additional validations on form element beyond those that can be specified on
 
 [TODO]
 
-1.  Make noneOf derivavable from other elements like the host.
+1.  Make noneOf, message derivable from other elements like the host.
 
 
 

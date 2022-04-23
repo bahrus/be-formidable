@@ -133,7 +133,7 @@ Support for such criteria is provided. For example with min:
 
 
 
-## Specify querySelectorAll() for the elements to checked [TODO]
+## Specify querySelectorAll() for the elements to be checked [TODO]
 
 
 
@@ -142,7 +142,8 @@ Support for such criteria is provided. For example with min:
     "invalidIf":[
         {
             "noneOf": [{
-                "find": ".my-form-element-group", "prop": "checked"
+                "find": ".my-form-element-group", 
+                "prop": "checked"
             }],
         }
     ]
@@ -150,6 +151,7 @@ Support for such criteria is provided. For example with min:
     ...
 </form>
 ```
+
 
 ## Side effect of calling checkValidity() [TODO]
 

@@ -55,7 +55,6 @@ Sub object checking is also allowed in the case of multiple "."'s.
 So this web component is not compatible with form elements that use . in the name.  If encountering a scenario where . may be in the name, we need to be a bit more verbose:
 
 ```html
-```html
 <form be-formidable='{
     "invalidIf":[
         {
@@ -76,7 +75,7 @@ So this web component is not compatible with form elements that use . in the nam
    ...
 </form>
 ```
-```
+
 
 ## Other validation criteria [TODO]
 

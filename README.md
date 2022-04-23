@@ -28,7 +28,25 @@ Add additional validations on form element beyond those that can be specified on
 
 Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
 
+
+
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
+
+## Naming
+
+If we need our HTML to be HTML5 compliant, we should probably prefix be- with data-.  That is supported.
+
+The ending -definitive is configurable also, within each ShadowDOM realm.
+
+## JSON-in-html?
+
+Editing JSON-in-html can be rather error prone.  A [VS Code extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to help with that, and is compatible with web versions of VSCode.
+
+And in practice, it is also quite ergonomic to edit these declarative web components in a *.mjs file that executes in node as the file changes, and compiles to an html file via the [may-it-be](https://github.com/bahrus/may-it-be) compiler.  This allows the attributes to be editable with JS-like syntax.  Typescript 4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
+
+1.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
+2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
+3.  [cotus](https://https://github.com/bahrus/cotus)
 
 ## Specifying property to check for truthiness [TODO]
 
@@ -46,7 +64,10 @@ To specify an alternative property to check:
         }
     ]
 }'>
-   ...
+   <input name=keysInPocket id=keysInPocket type=checkbox>
+    <label for=keysInPocket>I have keys in my pocket</label>
+    <input name=havePhone id=havePhone type=checkbox>
+    <label for=havePhone>I have a phone</label>
 </form>
 ```
 
@@ -79,11 +100,9 @@ So this web component is not compatible with form elements that use . in the nam
 
 ## Other validation criteria [TODO]
 
-The rules so far are strongly analogous to the "required" attribute of form fields.  But there are other validation thats form fields support (min, max, pattern, etc).  
+The rules so far are strongly analogous to the "required" attribute of form fields.  But there are other validations that form fields support (min, max, pattern, etc).  
 
-To specify such criteria, for example with min:
-
-
+Support for such criteria is provided. For example with min:
 
 ```html
 <form be-formidable='{

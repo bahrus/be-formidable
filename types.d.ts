@@ -1,13 +1,16 @@
 import {BeDecoratedProps} from 'be-decorated/types';
-
+import {IObserve} from 'be-observant/types';
 export interface BeFormidableVirtualProps{
-    invalidIf:{
-        noneOf: string[];
-    }
+    rules: FormCriteria[],
+    problems: string[],
 }
 
 export interface FormCriteria{
-    invalidIf: string[]
+    invalidIf: {
+        noneOf: string[],
+        message: string,
+    }
+    
 }
 
 export interface BeFormidableProps extends BeFormidableVirtualProps{
@@ -16,5 +19,6 @@ export interface BeFormidableProps extends BeFormidableVirtualProps{
 
 export interface BeFormidableActions{
     intro(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
+    //onRules(self: this): void;
     //onInvalidIf(self: this): void;
 }

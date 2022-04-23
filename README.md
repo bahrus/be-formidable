@@ -1,6 +1,6 @@
 # be-formidable
 
-![![None Shall Pass](https://imgflip.com/tag/monty+python+black+knight)](https://i.imgflip.com/2mj99q.jpg)
+[![None Shall Pass](https://i.imgflip.com/2mj99q.jpg)](https://imgflip.com/tag/monty+python+black+knight)
 
 Add additional validations on form element beyond those that can be specified on an individual field level.
 

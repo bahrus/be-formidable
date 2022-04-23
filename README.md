@@ -22,11 +22,11 @@ Add additional validations on form element beyond those that can be specified on
 </form>
 ```
 
-Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.
+Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
 
-It does not, however, call checkValidity, with the markup above.  To specify invoking checkValidity() during certain events, see below.
+The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, see below.
 
-"problems" is an array of strings that is stored to formEl.beDecorated.formidable.problems.  It lists validation errors.  The array is also posted with event "formidable::problems-changed", emitted from the form element (no bubbles / composed).
+"objections" is an array of strings that is stored to formEl.beDecorated.formidable.problems.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
 
 ## Specify querySelectorAll() to be checked [TODO]
 

@@ -9,31 +9,28 @@ export class BeFormidable {
         target.checkValidity = () => {
             if (!boundCheckValidity())
                 return this.markStatus(target, ['']);
-            const { rules } = this.proxy;
-            if (rules === undefined)
+            const { invalidIf } = this.proxy;
+            if (invalidIf === undefined)
                 return this.markStatus(target, []);
             const messages = [];
-            for (const rule of rules) {
-                const { invalidIf } = rule;
-                if (invalidIf !== undefined) {
-                    const { noneOf, message } = invalidIf;
-                    if (noneOf === undefined)
-                        return this.markStatus(target, []);
-                    const elements = target.elements;
-                    for (const input of elements) {
-                        const inputT = input;
-                        const name = inputT.name || inputT.id;
-                        if (name === undefined)
+            for (const criteria of invalidIf) {
+                const { noneOf, message } = criteria;
+                if (noneOf === undefined)
+                    return this.markStatus(target, []);
+                const elements = target.elements;
+                for (const input of elements) {
+                    const inputT = input;
+                    const name = inputT.name || inputT.id;
+                    if (name === undefined)
+                        continue;
+                    if (noneOf.includes(name)) {
+                        if (inputT.value) {
+                            //we're good.  not all of them are empty.
                             continue;
-                        if (noneOf.includes(name)) {
-                            if (inputT.value) {
-                                //we're good.  not all of them are empty.
-                                continue;
-                            }
                         }
                     }
-                    messages.push(message || `No value was entered for any of these fields: ${noneOf.join(', ')}`);
                 }
+                messages.push(message || `No value was entered for any of these fields: ${noneOf.join(', ')}`);
             }
             this.markStatus(target, messages);
             return messages.length === 0;
@@ -63,9 +60,8 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['rules', 'problems'],
+            virtualProps: ['problems'],
             intro: 'intro',
-            primaryProp: 'rules',
         },
         actions: {
         //onInvalidIf: 'invalidIf',

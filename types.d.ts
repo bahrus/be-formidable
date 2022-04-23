@@ -7,10 +7,28 @@ export interface BeFormidableVirtualProps{
 }
 
 export interface FormCriteria{
-    noneOf: string[],
+    noneOf: (string | string[2] | FieldValidationOptions)[],
     instructions: string,
     invalidMessage: string,
 }
+
+export interface FieldIdentifierOptions {
+    name?: string,
+    prop?: string,
+    find?: string,
+
+}
+
+export interface FieldValidationOptions{
+    disabled?: boolean,
+    required?: boolean,
+    min?: number,
+    max?: number,
+    pattern?: string,
+    type?: string,
+}
+
+export interface FieldOptions extends FieldIdentifierOptions, FieldValidationOptions{}
 
 export interface CheckEventMonitor{
     type: string,

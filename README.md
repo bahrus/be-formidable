@@ -43,7 +43,7 @@ Attaching this decorator / behavior results in overriding the checkValidity() me
 
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, see below.
 
-"objections" is an array of strings that is stored to formEl.beDecorated.formidable.problems.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
+"objections" is an array of strings that is stored to formEl.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
 
 ## Specify querySelectorAll() to be checked [TODO]
 
@@ -51,7 +51,7 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 <form be-formidable='{
     "invalidIf":[
         {
-            "noneOf": [[".my-form-element-group"]],
+            "noneOf": [[".my-form-element-group", "checked"]],
         }
     ]
 }'>
@@ -59,7 +59,7 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 </form>
 ```
 
-So if string is inside square brackets, it is treated as a querySelectorAll() selector.  
+So if rather than a string, we have an array, the first element of the array is expected to a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  
 
 ## Specify to monitor for certain events.[TODO]
 

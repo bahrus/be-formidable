@@ -7,7 +7,7 @@ export interface BeFormidableVirtualProps{
 }
 
 export interface FormCriteria{
-    noneOf: (string | string[2] | FieldValidationOptions)[],
+    noneOf: (string | FieldValidationOptions)[],
     instructions: string,
     invalidMessage: string,
 }

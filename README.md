@@ -133,21 +133,9 @@ Support for such criteria is provided. For example with min:
 
 
 
-## Specify querySelectorAll() to be checked [TODO]
+## Specify querySelectorAll() for the elements to checked [TODO]
 
-```html
-<form be-formidable='{
-    "invalidIf":[
-        {
-            "noneOf": [[".my-form-element-group", "checked"]],
-        }
-    ]
-}'>
-    ...
-</form>
-```
 
-So if rather than a string, or an object, we have an array as the RHS expression of noneOf, the first element of the array can be a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  The first element of the array can also be an object (for reasons stated above, like needing to specify a min value), in which case the second element is ignored (as it is specified via the "prop" field).  So the syntax above is equivalent to:
 
 ```html
 <form be-formidable='{

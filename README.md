@@ -43,10 +43,15 @@ We can specify when to automatically call checkValidity:
             "message": "Select a url or a file"
         }
     ],
-    "checkValidityOn": {
-        "change": true,
-        "submit": true
-    }
+    "checkValidityOn": [
+        "input", 
+        {
+            "type": "change",
+            "options": {
+                "capture": true
+            }
+        }
+    ]
 }'>
 <label>
     URL:
@@ -58,26 +63,12 @@ We can specify when to automatically call checkValidity:
 </form>
 ```
 
-The name "checkValidityOn" is a dictionary of events to monitor.  The keys are the event names, the values are booleans.  If the value is true, the checkValidity() method is invoked on the form element when the event is fired.  The default is to monitor for "change" and "submit".
-
-[Name and description above written by github autopilot].
-
-
-
-
-
-
-
-
 
 ## Unfortunate headwinds
 
 Unfortunately, the platform does not yet support specifying a custom validation function for a form element.
 
-This means that:
-
-1.  The developer needs to invoke checkValidity() by strategically adding event listeners.
-2.  the :valid and :invalid psudo-classes are not adjusted as needed.
+This means that the :valid and :invalid pseudo-classes are not adjusted as needed.
 
 The be-formidable decorator does set "valid" or "invalid" classes during the checkValidity() calls.
 

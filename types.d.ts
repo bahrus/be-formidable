@@ -3,7 +3,7 @@ import {IObserve} from 'be-observant/types';
 export interface BeFormidableVirtualProps{
     invalidIf: FormCriteria[],
     objections: string[],
-    checkValidityOn: 
+    checkValidityOn: string | (string | CheckEventMonitor)[],
 }
 
 export interface FormCriteria{

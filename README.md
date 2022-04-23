@@ -36,13 +36,13 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 
 If we need our HTML to be HTML5 compliant, we should probably prefix be- with data-.  That is supported.
 
-The ending -definitive is configurable also, within each ShadowDOM realm.
+The ending -formidable is configurable also, within each ShadowDOM realm.
 
 ## JSON-in-html?
 
 Editing JSON-in-html can be rather error prone.  A [VS Code extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to help with that, and is compatible with web versions of VSCode.
 
-And in practice, it is also quite ergonomic to edit these declarative web components in a *.mjs file that executes in node as the file changes, and compiles to an html file via the [may-it-be](https://github.com/bahrus/may-it-be) compiler.  This allows the attributes to be editable with JS-like syntax.  Typescript 4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
+And in practice, it is also quite ergonomic to edit these types of attributes in a *.mjs file that executes in (no)de(no) as the file changes, and compiles to an html file via the [may-it-be](https://github.com/bahrus/may-it-be) compiler, for example.  This allows the attributes to be editable with JS-like syntax.  Typescript 4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
 
 1.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
 2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
@@ -89,7 +89,8 @@ So this web component is not compatible with form elements that use . in the nam
                      "prop": "checked"
                  }
             ],
-            "instructions": "Not ready to go out."
+            "instructions": "Please take your keys, or at least a phone to call for a locksmith.",
+            "invalidMessage": "Not ready to go out."
         }
     ]
 }'>
@@ -100,7 +101,7 @@ So this web component is not compatible with form elements that use . in the nam
 
 ## Other validation criteria [TODO]
 
-The rules so far are strongly analogous to the "required" attribute of form fields.  But there are other validations that form fields support (min, max, pattern, etc).  
+The rules so far have essentially been providing support for the "required" attribute, but for groups of form elements.  But there are other validations that form fields support (min, max, pattern, etc).  
 
 Support for such criteria is provided. For example with min:
 
@@ -130,10 +131,7 @@ Support for such criteria is provided. For example with min:
 </form>
 ```
 
-## Side effect of not validating
 
-
-"objections" is an array of strings that is stored at location formEl.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
 
 ## Specify querySelectorAll() to be checked [TODO]
 
@@ -164,6 +162,11 @@ So if rather than a string, or an object, we have an array as the RHS expression
     ...
 </form>
 ```
+
+## Side effect of calling checkValidity() [TODO]
+
+
+"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
 
 ## Specify to monitor for certain events.[TODO]
 

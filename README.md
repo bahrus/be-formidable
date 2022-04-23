@@ -9,7 +9,9 @@ Add additional validations on form element beyond those that can be specified on
     "invalidIf":[
         {
             "noneOf": ["url", "file"],
-            "message": "Select a url or a file"
+            "instructions": "Please Select a url or a file",
+            "invalidMessage": "No url or file selected"
+
         }
     ]
 }'>
@@ -24,14 +26,23 @@ Add additional validations on form element beyond those that can be specified on
 </form>
 ```
 
-## Specifying property to check for truthiness
+Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
+
+The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
+
+## Specifying property to check for truthiness [TODO]
+
+By default, the "value" property is what is used on the element when it is checked for truthiness.
+
+To specify an alternative property to check:
 
 ```html
 <form be-formidable='{
     "invalidIf":[
         {
             "noneOf": ["keysInPocket.checked", "havePhone.checked"],
-            "message": "Not ready to go out."
+            "instructions": "Please take your keys, or at least a phone to call for a locksmith.",
+            "invalidMessage": "Not ready to go out."
         }
     ]
 }'>
@@ -39,11 +50,72 @@ Add additional validations on form element beyond those that can be specified on
 </form>
 ```
 
-Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
+Sub object checking is also allowed in the case of multiple "."'s.
 
-The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, see below.
+So this web component is not compatible with form elements that use . in the name.  If encountering a scenario where . may be in the name, we need to be a bit more verbose:
 
-"objections" is an array of strings that is stored to formEl.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
+```html
+```html
+<form be-formidable='{
+    "invalidIf":[
+        {
+            "noneOf": [
+                {
+                    "name": "keys.in.pocket",
+                    "prop": "checked"
+                 },
+                 {
+                     "name": "have.phone",
+                     "prop": "checked"
+                 }
+            ],
+            "instructions": "Not ready to go out."
+        }
+    ]
+}'>
+   ...
+</form>
+```
+```
+
+## Other validation criteria [TODO]
+
+The rules so far are strongly analogous to the "required" attribute of form fields.  But there are other validation thats form fields support (min, max, pattern, etc).  
+
+To specify such criteria, for example with min:
+
+
+
+```html
+<form be-formidable='{
+    "invalidIf":[
+        {
+            "noneOf": [
+                {
+                    "name": "firstCustomer Age",
+                    "min": 17,
+                },
+                {
+                    "name": "secondCustomer Age",
+                    "min": 17,
+                },
+                {
+                    "name": "thirdCustomer Age",
+                    "min": 17,
+                },
+            ],
+            "instructions": "No one under the age of 17 is permitted to watch this movie without being accompanied by an adult or guardian"
+        }
+    ]
+}'>
+   ...
+</form>
+```
+
+## Side effect of not validating
+
+
+"objections" is an array of strings that is stored at location formEl.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
 
 ## Specify querySelectorAll() to be checked [TODO]
 
@@ -59,9 +131,25 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 </form>
 ```
 
-So if rather than a string, we have an array, the first element of the array is expected to a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  
+So if rather than a string, or an object, we have an array, the first element of the array is expected to be a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  The first element of the array can also be an object (for reasons stated above, like needing to specify a min value), in which case the second element is ignored (as it is specified via the "prop" field).  So the syntax above is shorthand for:
+
+```html
+<form be-formidable='{
+    "invalidIf":[
+        {
+            "noneOf": [{
+                "find": ".my-form-element-group", "prop": "checked"
+            }],
+        }
+    ]
+}'>
+    ...
+</form>
+```
 
 ## Specify to monitor for certain events.[TODO]
+
+As mentioned in the beginning, the examples so far do **not** result in automatically calling checkValidity.
 
 We can specify when to automatically call checkValidity.
 
@@ -105,7 +193,6 @@ Most Complex:
 </form>
 ```
 
-## Make noneOf, message derivable from other elements, like the host.[TODO]
 
 ## Unfortunate headwinds
 

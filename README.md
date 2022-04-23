@@ -130,7 +130,7 @@ To specify such criteria, for example with min:
 </form>
 ```
 
-So if rather than a string, or an object, we have an array, the first element of the array is expected to be a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  The first element of the array can also be an object (for reasons stated above, like needing to specify a min value), in which case the second element is ignored (as it is specified via the "prop" field).  So the syntax above is shorthand for:
+So if rather than a string, or an object, we have an array as the RHS expression of noneOf, the first element of the array can be a string, to use in a querySelectorAll() selector within the form element.  The second optional value is the property to check for truthiness.  If not specified, the property is assumed to be "value".  The first element of the array can also be an object (for reasons stated above, like needing to specify a min value), in which case the second element is ignored (as it is specified via the "prop" field).  So the syntax above is equivalent to:
 
 ```html
 <form be-formidable='{
@@ -148,7 +148,7 @@ So if rather than a string, or an object, we have an array, the first element of
 
 ## Specify to monitor for certain events.[TODO]
 
-As mentioned in the beginning, the examples so far do **not** result in automatically calling checkValidity.
+As mentioned in the beginning, the examples so far do **not** result in automatically calling checkValidity, so nothing will actually happen unless some other script is invoking checkValidity.
 
 We can specify when to automatically call checkValidity.
 
@@ -168,7 +168,7 @@ Simplest:
 </form>
 ```
 
-Most Complex:
+If multiple events / optional settings are required:
 
 ```html
 <form be-formidable='{

@@ -1,4 +1,4 @@
-# be-formidable
+# be-formidable [TODO]
 
 [![None Shall Pass](https://i.imgflip.com/2mj99q.jpg)](https://imgflip.com/tag/monty+python+black+knight)
 
@@ -21,6 +21,21 @@ Add additional validations on form element beyond those that can be specified on
         File:
         <input name=file id=file type=file>
     </label>
+</form>
+```
+
+## Specifying property to check for truthiness
+
+```html
+<form be-formidable='{
+    "invalidIf":[
+        {
+            "noneOf": ["keysInPocket.checked", "havePhone.checked"],
+            "message": "Not ready to go out."
+        }
+    ]
+}'>
+   ...
 </form>
 ```
 
@@ -62,14 +77,7 @@ Simplest:
     ],
     "checkValidityOn": "input"
 }'>
-    <label>
-        URL:
-        <input name=url id=url type=url>
-    </label>
-    <label>
-        File:
-        <input name=file id=file type=file>
-    </label>
+    ...
 </form>
 ```
 
@@ -93,14 +101,7 @@ Most Complex:
         }
     ]
 }'>
-    <label>
-        URL:
-        <input name=url id=url type=url>
-    </label>
-    <label>
-        File:
-        <input name=file id=file type=file>
-    </label>
+    ...
 </form>
 ```
 

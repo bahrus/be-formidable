@@ -23,7 +23,8 @@ export class BeFormidable {
             const valid = messages.length === 0;
             this.markStatus(this.#target, valid);
             proxy.objections = messages;
-            return messages.length === 0;
+            proxy.isValid = valid;
+            return valid;
         };
         proxy.checkValidityAttached = true;
     }
@@ -60,7 +61,7 @@ export class BeFormidable {
             target.classList.add('invalid');
         }
     }
-    emitEvents = ['objections'];
+    emitEvents = ['objections', 'isValid'];
     disconnect({}) {
         const checkValidityOn = this.#previousCheckValidityOn;
         if (checkValidityOn === undefined)
@@ -89,7 +90,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached', 'isValid'],
             intro: 'intro',
             finale: 'finale',
             proxyPropDefaults: {

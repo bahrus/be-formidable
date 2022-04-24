@@ -46,7 +46,7 @@ And in practice, it is also quite ergonomic to edit these types of attributes in
 
 1.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
 2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
-3.  [cotus](https://https://github.com/bahrus/cotus)
+3.  [cotus](https://github.com/bahrus/cotus)
 
 ## Specifying property to check for truthiness [TODO]
 
@@ -71,7 +71,12 @@ To specify an alternative property to check:
 </form>
 ```
 
+<!--
 Sub object checking is also allowed in the case of multiple "."'s.
+
+Is there a use case for this
+ -->
+
 
 So this web component is not compatible with form elements that use . in the name.  If encountering a scenario where . may be in the name, we need to be a bit more verbose:
 

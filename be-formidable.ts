@@ -4,36 +4,33 @@ import {register} from 'be-hive/register.js';
 
 export class BeFormidable implements BeFormidableActions{
     #target!: HTMLFormElement;
+    #originalCheckValidity!: () => boolean;
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         this.#target = target;
         const checkValidity = target.checkValidity;
-        const boundCheckValidity = checkValidity.bind(target);
-        target.checkValidity = () => {
-            if(!boundCheckValidity()) return this.markStatus(target, ['']);
-            const {invalidIf} = this.proxy;
-            if(invalidIf === undefined) return this.markStatus(target, []);
-            const messages: string[] = [];
-            for(const criteria of invalidIf){
-                const {noneOf, message} = criteria;
-                if(noneOf === undefined) return this.markStatus(target, []);
-                const elements = target.elements;
-                for(const input of elements){
-                    const inputT = input as HTMLInputElement;
-                    const name = inputT.name || inputT.id;
-                    if(name === undefined) continue;
-                    if(noneOf.includes(name)){
-                        if(inputT.value) {
-                            //we're good.  not all of them are empty.
-                            continue;
-                        }
-                    }
-                }
-                messages.push(message || `No value was entered for any of these fields: ${noneOf.join(', ')}`);
+        this.#originalCheckValidity = checkValidity.bind(target);
+        
+    }
 
+    finale(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
+        this.disconnect(this);
+    }
+
+    async onInvalidIf({invalidIf}: this) {
+        const {evalInvalidIf} = await import('./evalInvalidIf.js');
+        this.#target.checkValidity = () => {
+            if(!this.#originalCheckValidity()){
+                this.objections = ['']; //TODO:  Gather all the invalid messages
+                return false;
             }
-            this.markStatus(target, messages);
+            const messages = evalInvalidIf(this, this.#target);
+            this.objections = messages;
             return messages.length === 0;
         }
+    }
+
+    onCheckValidityOn({}: this): void {
+        this.disconnect(this);
     }
 
     markStatus(target:HTMLFormElement, messages: string[]): boolean{
@@ -50,7 +47,11 @@ export class BeFormidable implements BeFormidableActions{
         return messages.length === 0;
     }
 
-    emitEvents = ['problems'];
+    emitEvents = ['objections'];
+
+    disconnect({}: this){
+        //TODO:  implement this
+    }
 
 }
 
@@ -68,12 +69,13 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['problems'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn'],
             intro: 'intro',
+            finale: 'finale',
         },
 
         actions:{
-            //onInvalidIf: 'invalidIf',
+            onInvalidIf: 'invalidIf',
         }
     },
     complexPropDefaults:{

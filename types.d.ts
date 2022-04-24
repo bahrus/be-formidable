@@ -7,7 +7,7 @@ export interface BeFormidableVirtualProps{
 }
 
 export interface FormCriteria{
-    noneOf: (string | FieldValidationOptions)[],
+    noneOf: (string | FieldOptions)[],
     instructions: string,
     invalidMessage: string,
 }
@@ -43,5 +43,5 @@ export interface BeFormidableActions{
     intro(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     finale(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     onInvalidIf(self: this): void;
-
+    onCheckValidityOn(self: this): void;
 }

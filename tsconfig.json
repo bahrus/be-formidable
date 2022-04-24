@@ -11,7 +11,7 @@
 	"files": [
 		"be-formidable.ts",
 		"playwright.config.ts",
-		"tests/test1.spec.ts",
+		"tests/test1.spec.mts",
 	],
 	"exclude":[
 		"node_modules"

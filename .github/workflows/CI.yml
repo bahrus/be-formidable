@@ -13,6 +13,8 @@ jobs:
       run: npm ci
     - name: Install Playwright
       run: npx playwright install --with-deps
+    - name: Run serve
+      run: npm run serve
     - name: Run Playwright tests
       run: npm run test
       

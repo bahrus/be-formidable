@@ -17,7 +17,7 @@ export interface FormCriteria{
 
 export interface FieldIdentifierOptions {
     name?: string,
-    prop?: string,
+    prop: string,
     find?: string,
 
 }

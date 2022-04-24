@@ -17,6 +17,7 @@ export class BeFormidable {
         this.#target.checkValidity = () => {
             if (!this.#originalCheckValidity()) {
                 this.objections = ['']; //TODO:  Gather all the invalid messages
+                proxy.isValid = false;
                 return false;
             }
             const messages = evalInvalidIf(this, this.#target);

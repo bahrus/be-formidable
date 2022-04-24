@@ -46,6 +46,8 @@ export function evalInvalidIf({ proxy, invalidIf }, target) {
         if (!found) {
             for (const field of findBasedNoneOfs) {
                 const { find } = field;
+                if (find === undefined)
+                    continue;
                 const elements = Array.from(target.querySelectorAll(find));
                 for (const element of elements) {
                     if (element[field.prop]) { //TODO support nested props

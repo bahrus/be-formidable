@@ -1,24 +1,12 @@
-// playwright.config.ts
-import { devices } from '@playwright/test';
 const config = {
-    forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 0,
-    use: {
-        trace: 'on-first-retry',
+    webServer: {
+        command: 'npm run serve',
+        url: 'http://localhost:3030/',
+        timeout: 120 * 1000,
+        reuseExistingServer: !process.env.CI,
     },
-    projects: [
-        {
-            name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
-        },
-        // {
-        //   name: 'firefox',
-        //   use: { ...devices['Desktop Firefox'] },
-        // },
-        // {
-        //   name: 'webkit',
-        //   use: { ...devices['Desktop Safari'] },
-        // },
-    ],
+    use: {
+        baseURL: 'http://localhost:3030/',
+    },
 };
 export default config;

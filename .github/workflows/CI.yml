@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-    - main
+    - baseline
 
 jobs:
   e2e-tests:

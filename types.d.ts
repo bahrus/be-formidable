@@ -4,6 +4,7 @@ export interface BeFormidableVirtualProps{
     invalidIf: FormCriteria[],
     objections: string[],
     checkValidityOn: string | (string | CheckEventMonitor)[],
+    checkValidityOnInit: boolean;
 }
 
 export interface FormCriteria{
@@ -44,4 +45,5 @@ export interface BeFormidableActions{
     finale(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     onInvalidIf(self: this): void;
     onCheckValidityOn(self: this): void;
+    onCheckValidityOnInit(self: this): void;
 }

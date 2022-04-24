@@ -28,8 +28,6 @@ Add additional validations on form element beyond those that can be specified on
 
 Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
 
-
-
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
 
 ## Naming

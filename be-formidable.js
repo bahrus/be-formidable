@@ -2,54 +2,82 @@ import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export class BeFormidable {
     #target;
+    #originalCheckValidity;
     intro(proxy, target, beDecorProps) {
         this.#target = target;
         const checkValidity = target.checkValidity;
-        const boundCheckValidity = checkValidity.bind(target);
-        target.checkValidity = () => {
-            if (!boundCheckValidity())
-                return this.markStatus(target, ['']);
-            const { invalidIf } = this.proxy;
-            if (invalidIf === undefined)
-                return this.markStatus(target, []);
-            const messages = [];
-            for (const criteria of invalidIf) {
-                const { noneOf, message } = criteria;
-                if (noneOf === undefined)
-                    return this.markStatus(target, []);
-                const elements = target.elements;
-                for (const input of elements) {
-                    const inputT = input;
-                    const name = inputT.name || inputT.id;
-                    if (name === undefined)
-                        continue;
-                    if (noneOf.includes(name)) {
-                        if (inputT.value) {
-                            //we're good.  not all of them are empty.
-                            continue;
-                        }
-                    }
-                }
-                messages.push(message || `No value was entered for any of these fields: ${noneOf.join(', ')}`);
+        this.#originalCheckValidity = checkValidity.bind(target);
+    }
+    finale(proxy, target, beDecorProps) {
+        this.disconnect(this);
+        this.#target = undefined;
+    }
+    async onInvalidIf({ invalidIf }) {
+        const { evalInvalidIf } = await import('./evalInvalidIf.js');
+        this.#target.checkValidity = () => {
+            if (!this.#originalCheckValidity()) {
+                this.objections = ['']; //TODO:  Gather all the invalid messages
+                return false;
             }
-            this.markStatus(target, messages);
+            const messages = evalInvalidIf(this, this.#target);
+            const valid = messages.length === 0;
+            this.markStatus(this.#target, valid);
+            this.objections = messages;
             return messages.length === 0;
         };
     }
-    markStatus(target, messages) {
-        if (messages.length === 0) {
+    #previousCheckValidityOn;
+    onCheckValidityOn({ checkValidityOn }) {
+        this.disconnect(this);
+        if (typeof checkValidityOn === 'string') {
+            this.#target.addEventListener(checkValidityOn, this.doCheck);
+        }
+        else {
+            for (const checkOn of checkValidityOn) {
+                if (typeof checkOn === 'string') {
+                    this.#target.addEventListener(checkOn, this.doCheck);
+                }
+                else {
+                    this.#target.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                }
+            }
+        }
+    }
+    onCheckValidityOnInit(self) {
+        this.#target.checkValidity();
+    }
+    doCheck = (e) => {
+        this.#target.checkValidity();
+    };
+    markStatus(target, valid) {
+        if (valid) {
             target.classList.remove('invalid');
             target.classList.add('valid');
         }
         else {
             target.classList.remove('valid');
             target.classList.add('invalid');
-            const message = messages.join('\n');
         }
-        this.proxy.problems = messages;
-        return messages.length === 0;
     }
-    emitEvents = ['problems'];
+    emitEvents = ['objections'];
+    disconnect({}) {
+        const checkValidityOn = this.#previousCheckValidityOn;
+        if (checkValidityOn === undefined)
+            return;
+        if (typeof checkValidityOn === 'string') {
+            this.#target.removeEventListener(checkValidityOn, this.doCheck);
+        }
+        else {
+            for (const checkOn of checkValidityOn) {
+                if (typeof checkOn === 'string') {
+                    this.#target.removeEventListener(checkOn, this.doCheck);
+                }
+                else {
+                    this.#target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
+                }
+            }
+        }
+    }
 }
 const tagName = 'be-formidable';
 const ifWantsToBe = 'formidable';
@@ -60,11 +88,17 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['problems'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit'],
             intro: 'intro',
+            finale: 'finale',
+            proxyPropDefaults: {
+                checkValidityOnInit: true,
+            }
         },
         actions: {
-        //onInvalidIf: 'invalidIf',
+            onInvalidIf: 'invalidIf',
+            onCheckValidityOn: 'checkValidityOn',
+            onCheckValidityOnInit: 'checkValidityOnInit',
         }
     },
     complexPropDefaults: {

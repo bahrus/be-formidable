@@ -1,9 +1,9 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeFormidableActions, BeFormidableProps, BeFormidableVirtualProps, FormCriteria} from './types';
+import {BeFormidableActions, BeFormidableProps, BeFormidableVirtualProps, FormCriteria, CheckEventMonitor} from './types';
 import {register} from 'be-hive/register.js';
 
 export class BeFormidable implements BeFormidableActions{
-    #target!: HTMLFormElement;
+    #target: HTMLFormElement | undefined;
     #originalCheckValidity!: () => boolean;
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         this.#target = target;
@@ -14,43 +14,75 @@ export class BeFormidable implements BeFormidableActions{
 
     finale(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         this.disconnect(this);
+        this.#target = undefined;
+        
     }
 
     async onInvalidIf({invalidIf}: this) {
         const {evalInvalidIf} = await import('./evalInvalidIf.js');
-        this.#target.checkValidity = () => {
+        this.#target!.checkValidity = () => {
             if(!this.#originalCheckValidity()){
                 this.objections = ['']; //TODO:  Gather all the invalid messages
                 return false;
             }
-            const messages = evalInvalidIf(this, this.#target);
+            const messages = evalInvalidIf(this, this.#target!);
+            const valid = messages.length === 0;
+            this.markStatus(this.#target!, valid);
             this.objections = messages;
             return messages.length === 0;
         }
     }
 
-    onCheckValidityOn({}: this): void {
+    #previousCheckValidityOn: undefined | string | (string | CheckEventMonitor)[];
+    onCheckValidityOn({checkValidityOn}: this): void {
         this.disconnect(this);
+        if(typeof checkValidityOn === 'string'){
+            this.#target!.addEventListener(checkValidityOn, this.doCheck);
+        }else{
+            for(const checkOn of checkValidityOn){
+                if(typeof checkOn === 'string'){
+                    this.#target!.addEventListener(checkOn, this.doCheck);
+                }else{
+                    this.#target!.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                }
+            }
+        }
     }
 
-    markStatus(target:HTMLFormElement, messages: string[]): boolean{
-        if(messages.length === 0){
+    onCheckValidityOnInit(self: this): void {
+        this.#target!.checkValidity();
+    }
+
+    doCheck = (e: Event) => {
+        this.#target!.checkValidity();
+    }
+
+    markStatus(target:HTMLFormElement, valid: boolean){
+        if(valid){
             target.classList.remove('invalid');
             target.classList.add('valid');
         }else{
             target.classList.remove('valid');
             target.classList.add('invalid');
-            const message = messages.join('\n');
-            
         }
-        this.proxy.problems = messages;
-        return messages.length === 0;
     }
 
     emitEvents = ['objections'];
 
     disconnect({}: this){
-        //TODO:  implement this
+        const checkValidityOn = this.#previousCheckValidityOn;
+        if(checkValidityOn === undefined) return;
+        if(typeof checkValidityOn === 'string'){
+            this.#target!.removeEventListener(checkValidityOn, this.doCheck);
+        }else{
+            for(const checkOn of checkValidityOn){
+                if(typeof checkOn === 'string'){
+                    this.#target!.removeEventListener(checkOn, this.doCheck);
+                }else{
+                    this.#target!.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
+                }
+            }
+        }
     }
 
 }
@@ -69,13 +101,18 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['invalidIf', 'objections', 'checkValidityOn'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit'],
             intro: 'intro',
             finale: 'finale',
+            proxyPropDefaults:{
+                checkValidityOnInit: true,
+            }
         },
 
         actions:{
             onInvalidIf: 'invalidIf',
+            onCheckValidityOn: 'checkValidityOn',
+            onCheckValidityOnInit: 'checkValidityOnInit',
         }
     },
     complexPropDefaults:{

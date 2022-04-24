@@ -1,5 +1,7 @@
 # be-formidable
 
+[![Playwright Tests](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml)
+
 [![None Shall Pass](https://i.imgflip.com/2mj99q.jpg)](https://imgflip.com/tag/monty+python+black+knight)
 
 Add additional validations on form element beyond those that can be specified on an individual field level.

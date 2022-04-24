@@ -12,7 +12,7 @@ export class BeFormidable {
         this.disconnect(this);
         this.#target = undefined;
     }
-    async onInvalidIf({ invalidIf }) {
+    async onInvalidIf({ invalidIf, proxy }) {
         const { evalInvalidIf } = await import('./evalInvalidIf.js');
         this.#target.checkValidity = () => {
             if (!this.#originalCheckValidity()) {
@@ -22,9 +22,10 @@ export class BeFormidable {
             const messages = evalInvalidIf(this, this.#target);
             const valid = messages.length === 0;
             this.markStatus(this.#target, valid);
-            this.objections = messages;
+            proxy.objections = messages;
             return messages.length === 0;
         };
+        proxy.checkValidityAttached = true;
     }
     #previousCheckValidityOn;
     onCheckValidityOn({ checkValidityOn }) {
@@ -88,7 +89,7 @@ define({
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached'],
             intro: 'intro',
             finale: 'finale',
             proxyPropDefaults: {
@@ -98,7 +99,9 @@ define({
         actions: {
             onInvalidIf: 'invalidIf',
             onCheckValidityOn: 'checkValidityOn',
-            onCheckValidityOnInit: 'checkValidityOnInit',
+            onCheckValidityOnInit: {
+                ifAllOf: ['checkValidityOnInit', 'checkValidityAttached']
+            }
         }
     },
     complexPropDefaults: {

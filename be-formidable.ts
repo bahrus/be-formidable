@@ -18,7 +18,7 @@ export class BeFormidable implements BeFormidableActions{
         
     }
 
-    async onInvalidIf({invalidIf}: this) {
+    async onInvalidIf({invalidIf, proxy}: this) {
         const {evalInvalidIf} = await import('./evalInvalidIf.js');
         this.#target!.checkValidity = () => {
             if(!this.#originalCheckValidity()){
@@ -28,14 +28,16 @@ export class BeFormidable implements BeFormidableActions{
             const messages = evalInvalidIf(this, this.#target!);
             const valid = messages.length === 0;
             this.markStatus(this.#target!, valid);
-            this.objections = messages;
+            proxy.objections = messages;
             return messages.length === 0;
         }
+        proxy.checkValidityAttached = true;
     }
 
     #previousCheckValidityOn: undefined | string | (string | CheckEventMonitor)[];
     onCheckValidityOn({checkValidityOn}: this): void {
         this.disconnect(this);
+        
         if(typeof checkValidityOn === 'string'){
             this.#target!.addEventListener(checkValidityOn, this.doCheck);
         }else{
@@ -101,7 +103,7 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
         propDefaults:{
             upgrade,
             ifWantsToBe,
-            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit'],
+            virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached'],
             intro: 'intro',
             finale: 'finale',
             proxyPropDefaults:{
@@ -112,7 +114,9 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
         actions:{
             onInvalidIf: 'invalidIf',
             onCheckValidityOn: 'checkValidityOn',
-            onCheckValidityOnInit: 'checkValidityOnInit',
+            onCheckValidityOnInit: {
+                ifAllOf: ['checkValidityOnInit', 'checkValidityAttached']
+            }
         }
     },
     complexPropDefaults:{

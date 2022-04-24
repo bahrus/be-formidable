@@ -1,4 +1,4 @@
-# be-formidable [TODO]
+# be-formidable
 
 [![None Shall Pass](https://i.imgflip.com/2mj99q.jpg)](https://imgflip.com/tag/monty+python+black+knight)
 
@@ -46,7 +46,7 @@ And in practice, it is also quite ergonomic to edit these types of attributes in
 2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
 3.  [cotus](https://github.com/bahrus/cotus)
 
-## Specifying property to check for truthiness [TODO]
+## Specifying property to check for truthiness
 
 By default, the "value" property is what is used on the element when it is checked for truthiness.
 
@@ -102,7 +102,7 @@ So this web component is not compatible with form elements that use . in the nam
 ```
 
 
-## Other validation criteria [TODO]
+## Other validation criteria
 
 The rules so far have essentially been providing support for the "required" attribute, but for groups of form elements.  But there are other validations that form fields support (min, max, pattern, etc).  
 
@@ -136,9 +136,7 @@ Support for such criteria is provided. For example with min:
 
 
 
-## Specify querySelectorAll() for the elements to be checked [TODO]
-
-
+## Specify querySelectorAll() for the elements to be checked
 
 ```html
 <form be-formidable='{
@@ -156,14 +154,14 @@ Support for such criteria is provided. For example with min:
 ```
 
 
-## Side effect of calling checkValidity() [TODO]
+## Side effect of calling checkValidity()
 
 
-"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). [TODO]
+"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). 
 
-## Specify to monitor for certain events.[TODO]
+## Specify to monitor for certain events.
 
-As mentioned in the beginning, the examples so far do **not** result in automatically calling checkValidity, so nothing will actually happen unless some other script is invoking checkValidity.
+As mentioned in the beginning, the examples so far do **not** result in automatically calling checkValidity (except, by default as soon as the behavior is attached), so nothing will actually happen unless some other script is invoking checkValidity.
 
 We can specify when to automatically call checkValidity.
 

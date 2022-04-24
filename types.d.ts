@@ -5,6 +5,7 @@ export interface BeFormidableVirtualProps{
     objections: string[],
     checkValidityOn: string | (string | CheckEventMonitor)[],
     checkValidityOnInit: boolean;
+    checkValidityAttached: boolean;
 }
 
 export interface FormCriteria{

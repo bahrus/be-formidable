@@ -4,5 +4,5 @@ test('test1', async ({ page }) => {
     //   const title = page.locator('.navbar__inner .navbar__title');
     //   await expect(title).toHaveText('Playwright');
     const form = page.locator('form');
-    await expect(form).toHaveClass('invalidx');
+    await expect(form).toHaveClass('invalid');
 });

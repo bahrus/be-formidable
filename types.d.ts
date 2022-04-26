@@ -1,13 +1,18 @@
 import {BeDecoratedProps} from 'be-decorated/types';
 import {IObserve} from 'be-observant/types';
-export interface BeFormidableVirtualProps{
+
+export interface BeFormidableEndUserProps{
     invalidIf: FormCriteria[],
-    objections: string[],
     checkValidityOn: string | (string | CheckEventMonitor)[],
     checkValidityOnInit: boolean;
+}
+
+export interface BeFormidableComputedProps{
+    objections: string[],
     checkValidityAttached: boolean;
     isValid: boolean;
 }
+export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, BeFormidableComputedProps{}
 
 export interface FormCriteria{
     noneOf: (string | FieldOptions)[],

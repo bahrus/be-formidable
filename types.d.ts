@@ -1,5 +1,4 @@
 import {BeDecoratedProps} from 'be-decorated/types';
-import {IObserve} from 'be-observant/types';
 
 export interface BeFormidableEndUserProps{
     invalidIf: FormCriteria[],

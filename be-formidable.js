@@ -62,7 +62,6 @@ export class BeFormidable {
             target.classList.add('invalid');
         }
     }
-    emitEvents = ['objections', 'isValid'];
     disconnect({}) {
         const checkValidityOn = this.#previousCheckValidityOn;
         if (checkValidityOn === undefined)
@@ -92,6 +91,7 @@ define({
             upgrade,
             ifWantsToBe,
             virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached', 'isValid'],
+            emitEvents: ['objections', 'isValid'],
             intro: 'intro',
             finale: 'finale',
             proxyPropDefaults: {

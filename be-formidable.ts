@@ -71,7 +71,7 @@ export class BeFormidable implements BeFormidableActions{
         }
     }
 
-    emitEvents = ['objections', 'isValid'];
+    
 
     disconnect({}: this){
         const checkValidityOn = this.#previousCheckValidityOn;
@@ -106,6 +106,7 @@ define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActio
             upgrade,
             ifWantsToBe,
             virtualProps: ['invalidIf', 'objections', 'checkValidityOn', 'checkValidityOnInit', 'checkValidityAttached', 'isValid'],
+            emitEvents: ['objections', 'isValid'],
             intro: 'intro',
             finale: 'finale',
             proxyPropDefaults:{

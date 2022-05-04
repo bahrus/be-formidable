@@ -103,6 +103,9 @@ So this web component is not compatible with form elements that use . in the nam
 </form>
 ```
 
+## Support for cancelling previous calls [TODO]
+
+## Support for debouncing [TODO]]
 
 ## Other validation criteria [TODO]
 

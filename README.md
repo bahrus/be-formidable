@@ -32,6 +32,10 @@ Attaching this decorator / behavior results in overriding the checkValidity() me
 
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
 
+## Why two negatives?
+
+It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  But this component prefers the "innocent until proven guilty" way of thinking.
+
 ## Naming
 
 If we need our HTML to be HTML5 compliant, we should probably prefix be- with data-.  That is supported.

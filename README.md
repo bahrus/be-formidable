@@ -107,10 +107,6 @@ So this web component is not compatible with form elements that use . in the nam
 </form>
 ```
 
-## Support for cancelling previous calls [TODO]
-
-## Support for debouncing [TODO]]
-
 ## Other validation criteria [TODO]
 
 The rules so far have essentially been providing support for the "required" attribute, but for groups of form elements.  But there are other validations that form fields support (min, max, pattern, etc).  

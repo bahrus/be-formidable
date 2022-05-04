@@ -34,7 +34,9 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 
 ## Why two negatives?
 
-It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  But this component prefers the "innocent until proven guilty" way of thinking.
+It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  Here's why:
+
+1.  This component prefers the "innocent until proven guilty" way of thinking, because it feels a bit truer to what it is actually doing, and may more effectively alert the developer to the fact that the form will be considered valid until the be-formidable behavior / decorator is attached.  Before then, it might be prudent to hide/disable any submit buttons, or even hide or obscure the entire form.
 
 ## Naming
 
@@ -82,7 +84,7 @@ Is there a use case for this
  -->
 
 
-So this web component is not compatible with form elements that use . in the name.  If encountering a scenario where . may be in the name, we need to be a bit more verbose:
+So this syntax is not compatible with form elements that use "." in the name.  If encountering a scenario where "." may be in the name, we need to be a bit more verbose:
 
 ```html
 <form be-formidable='{

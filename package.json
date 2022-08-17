@@ -29,13 +29,13 @@
     "package-check": "package-check"
   },
   "dependencies": {
-    "be-decorated": "0.0.113",
-    "be-hive": "0.0.45"
+    "be-decorated": "0.0.131",
+    "be-hive": "0.0.54"
   },
   "devDependencies": {
-    "@playwright/test": "1.21.1",
+    "@playwright/test": "1.25.0",
     "@skypack/package-check": "0.2.2",
-    "may-it-serve": "0.0.0"
+    "may-it-serve": "0.0.2"
   },
   "repository": {
     "type": "git",

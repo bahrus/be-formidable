@@ -31,6 +31,7 @@ export class BeFormidable extends EventTarget implements BeFormidableActions{
             return valid;
         }
         proxy.checkValidityAttached = true;
+        proxy.resolved = true;
     }
 
     #previousCheckValidityOn: undefined | string | (string | CheckEventMonitor)[];

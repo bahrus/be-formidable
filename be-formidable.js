@@ -25,6 +25,7 @@ export class BeFormidable extends EventTarget {
             return valid;
         };
         proxy.checkValidityAttached = true;
+        proxy.resolved = true;
     }
     #previousCheckValidityOn;
     onCheckValidityOn({ checkValidityOn, self }) {

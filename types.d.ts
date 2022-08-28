@@ -1,4 +1,4 @@
-import {BeDecoratedProps} from 'be-decorated/types';
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
 export interface BeFormidableEndUserProps{
     invalidIf: FormCriteria[],
@@ -11,7 +11,7 @@ export interface BeFormidableComputedProps{
     checkValidityAttached: boolean;
     isValid: boolean;
 }
-export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, BeFormidableComputedProps{}
+export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, BeFormidableComputedProps, MinimalProxy<HTMLFormElement>{}
 
 export interface FormCriteria{
     noneOf: (string | FieldOptions)[],

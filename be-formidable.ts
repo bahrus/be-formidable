@@ -2,11 +2,9 @@ import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {BeFormidableActions, BeFormidableProps, BeFormidableVirtualProps, FormCriteria, CheckEventMonitor} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeFormidable implements BeFormidableActions{
-    #target: HTMLFormElement | undefined;
+export class BeFormidable extends EventTarget implements BeFormidableActions{
     #originalCheckValidity!: () => boolean;
     intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
-        this.#target = target;
         const checkValidity = target.checkValidity;
         this.#originalCheckValidity = checkValidity.bind(target);
         
@@ -14,21 +12,20 @@ export class BeFormidable implements BeFormidableActions{
 
     finale(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         this.disconnect(this);
-        this.#target = undefined;
         
     }
 
-    async onInvalidIf({invalidIf, proxy}: this) {
+    async onInvalidIf({invalidIf, proxy, self}: this) {
         const {evalInvalidIf} = await import('./evalInvalidIf.js');
-        this.#target!.checkValidity = () => {
+        self.checkValidity = () => {
             if(!this.#originalCheckValidity()){
                 this.objections = ['']; //TODO:  Gather all the invalid messages
                 proxy.isValid = false;
                 return false;
             }
-            const messages = evalInvalidIf(this, this.#target!);
+            const messages = evalInvalidIf(this, self);
             const valid = messages.length === 0;
-            this.markStatus(this.#target!, valid);
+            this.markStatus(self, valid);
             proxy.objections = messages;
             proxy.isValid = valid;
             return valid;
@@ -37,28 +34,28 @@ export class BeFormidable implements BeFormidableActions{
     }
 
     #previousCheckValidityOn: undefined | string | (string | CheckEventMonitor)[];
-    onCheckValidityOn({checkValidityOn}: this): void {
+    onCheckValidityOn({checkValidityOn, self}: this): void {
         this.disconnect(this);
         
         if(typeof checkValidityOn === 'string'){
-            this.#target!.addEventListener(checkValidityOn, this.doCheck);
+            self.addEventListener(checkValidityOn, this.doCheck);
         }else{
             for(const checkOn of checkValidityOn){
                 if(typeof checkOn === 'string'){
-                    this.#target!.addEventListener(checkOn, this.doCheck);
+                    self.addEventListener(checkOn, this.doCheck);
                 }else{
-                    this.#target!.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    self.addEventListener(checkOn.type, this.doCheck, checkOn.options);
                 }
             }
         }
     }
 
-    onCheckValidityOnInit(self: this): void {
-        this.#target!.checkValidity();
+    onCheckValidityOnInit({self}: this): void {
+        self.checkValidity();
     }
 
     doCheck = (e: Event) => {
-        this.#target!.checkValidity();
+        this.proxy.self.checkValidity();
     }
 
     markStatus(target:HTMLFormElement, valid: boolean){
@@ -76,14 +73,15 @@ export class BeFormidable implements BeFormidableActions{
     disconnect({}: this){
         const checkValidityOn = this.#previousCheckValidityOn;
         if(checkValidityOn === undefined) return;
+        const target = this.proxy.self;
         if(typeof checkValidityOn === 'string'){
-            this.#target!.removeEventListener(checkValidityOn, this.doCheck);
+            target.removeEventListener(checkValidityOn, this.doCheck);
         }else{
             for(const checkOn of checkValidityOn){
                 if(typeof checkOn === 'string'){
-                    this.#target!.removeEventListener(checkOn, this.doCheck);
+                    target.removeEventListener(checkOn, this.doCheck);
                 }else{
-                    this.#target!.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
                 }
             }
         }

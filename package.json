@@ -29,8 +29,8 @@
     "package-check": "package-check"
   },
   "dependencies": {
-    "be-decorated": "0.0.131",
-    "be-hive": "0.0.54"
+    "be-decorated": "0.0.147",
+    "be-hive": "0.0.57"
   },
   "devDependencies": {
     "@playwright/test": "1.25.0",

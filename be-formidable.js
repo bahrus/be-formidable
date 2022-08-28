@@ -1,28 +1,25 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-export class BeFormidable {
-    #target;
+export class BeFormidable extends EventTarget {
     #originalCheckValidity;
     intro(proxy, target, beDecorProps) {
-        this.#target = target;
         const checkValidity = target.checkValidity;
         this.#originalCheckValidity = checkValidity.bind(target);
     }
     finale(proxy, target, beDecorProps) {
         this.disconnect(this);
-        this.#target = undefined;
     }
-    async onInvalidIf({ invalidIf, proxy }) {
+    async onInvalidIf({ invalidIf, proxy, self }) {
         const { evalInvalidIf } = await import('./evalInvalidIf.js');
-        this.#target.checkValidity = () => {
+        self.checkValidity = () => {
             if (!this.#originalCheckValidity()) {
                 this.objections = ['']; //TODO:  Gather all the invalid messages
                 proxy.isValid = false;
                 return false;
             }
-            const messages = evalInvalidIf(this, this.#target);
+            const messages = evalInvalidIf(this, self);
             const valid = messages.length === 0;
-            this.markStatus(this.#target, valid);
+            this.markStatus(self, valid);
             proxy.objections = messages;
             proxy.isValid = valid;
             return valid;
@@ -30,27 +27,27 @@ export class BeFormidable {
         proxy.checkValidityAttached = true;
     }
     #previousCheckValidityOn;
-    onCheckValidityOn({ checkValidityOn }) {
+    onCheckValidityOn({ checkValidityOn, self }) {
         this.disconnect(this);
         if (typeof checkValidityOn === 'string') {
-            this.#target.addEventListener(checkValidityOn, this.doCheck);
+            self.addEventListener(checkValidityOn, this.doCheck);
         }
         else {
             for (const checkOn of checkValidityOn) {
                 if (typeof checkOn === 'string') {
-                    this.#target.addEventListener(checkOn, this.doCheck);
+                    self.addEventListener(checkOn, this.doCheck);
                 }
                 else {
-                    this.#target.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    self.addEventListener(checkOn.type, this.doCheck, checkOn.options);
                 }
             }
         }
     }
-    onCheckValidityOnInit(self) {
-        this.#target.checkValidity();
+    onCheckValidityOnInit({ self }) {
+        self.checkValidity();
     }
     doCheck = (e) => {
-        this.#target.checkValidity();
+        this.proxy.self.checkValidity();
     };
     markStatus(target, valid) {
         if (valid) {
@@ -66,16 +63,17 @@ export class BeFormidable {
         const checkValidityOn = this.#previousCheckValidityOn;
         if (checkValidityOn === undefined)
             return;
+        const target = this.proxy.self;
         if (typeof checkValidityOn === 'string') {
-            this.#target.removeEventListener(checkValidityOn, this.doCheck);
+            target.removeEventListener(checkValidityOn, this.doCheck);
         }
         else {
             for (const checkOn of checkValidityOn) {
                 if (typeof checkOn === 'string') {
-                    this.#target.removeEventListener(checkOn, this.doCheck);
+                    target.removeEventListener(checkOn, this.doCheck);
                 }
                 else {
-                    this.#target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
                 }
             }
         }

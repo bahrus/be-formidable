@@ -1,8 +1,8 @@
-import {BeFormidableProps, FieldOptions} from './types';
+import {PP, FieldOptions} from './types';
 
-export function evalInvalidIf({proxy, invalidIf}: BeFormidableProps, target: HTMLFormElement){
+export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
     const messages: string[] = [];
-    for(const criteria of invalidIf){
+    for(const criteria of invalidIf!){
         const {noneOf} = criteria;
         if(noneOf === undefined) continue; // support other rules in the future
         const noneOfLookup: {[key: string]: FieldOptions} = {};

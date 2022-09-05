@@ -1,17 +1,16 @@
 import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
 export interface BeFormidableEndUserProps{
-    invalidIf: FormCriteria[],
-    checkValidityOn: string | (string | CheckEventMonitor)[],
-    checkValidityOnInit: boolean;
+    invalidIf?: FormCriteria[],
+    checkValidityOn?: string | (string | CheckEventMonitor)[],
+    checkValidityOnInit?: boolean;
 }
 
-export interface BeFormidableComputedProps{
+export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, MinimalProxy<HTMLFormElement>{
     objections: string[],
     checkValidityAttached: boolean;
     isValid: boolean;
 }
-export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, BeFormidableComputedProps, MinimalProxy<HTMLFormElement>{}
 
 export interface FormCriteria{
     noneOf: (string | FieldOptions)[],
@@ -42,14 +41,18 @@ export interface CheckEventMonitor{
     options: AddEventListenerOptions,
 }
 
-export interface BeFormidableProps extends BeFormidableVirtualProps{
-    proxy: HTMLFormElement & BeFormidableVirtualProps;
+export type Proxy = HTMLFormElement & BeFormidableVirtualProps;
+
+export interface ProxyProps extends BeFormidableVirtualProps{
+    proxy: Proxy;
 }
 
+export type PP = ProxyProps;
+
 export interface BeFormidableActions{
-    intro(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: HTMLFormElement & BeFormidableVirtualProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
-    onInvalidIf(self: this): void;
-    onCheckValidityOn(self: this): void;
-    onCheckValidityOnInit(self: this): void;
+    intro(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
+    onInvalidIf(pp: PP): void;
+    onCheckValidityOn(pp: PP): void;
+    onCheckValidityOnInit(pp: PP): void;
 }

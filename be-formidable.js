@@ -7,17 +7,18 @@ export class BeFormidable extends EventTarget {
         this.#originalCheckValidity = checkValidity.bind(target);
     }
     finale(proxy, target, beDecorProps) {
-        this.disconnect(this);
+        this.disconnect();
     }
-    async onInvalidIf({ invalidIf, proxy, self }) {
+    async onInvalidIf(pp) {
+        const { invalidIf, proxy, self } = pp;
         const { evalInvalidIf } = await import('./evalInvalidIf.js');
         self.checkValidity = () => {
             if (!this.#originalCheckValidity()) {
-                this.objections = ['']; //TODO:  Gather all the invalid messages
+                proxy.objections = ['']; //TODO:  Gather all the invalid messages
                 proxy.isValid = false;
                 return false;
             }
-            const messages = evalInvalidIf(this, self);
+            const messages = evalInvalidIf(pp, self);
             const valid = messages.length === 0;
             this.markStatus(self, valid);
             proxy.objections = messages;
@@ -28,18 +29,31 @@ export class BeFormidable extends EventTarget {
         proxy.resolved = true;
     }
     #previousCheckValidityOn;
+    #abortControllers;
     onCheckValidityOn({ checkValidityOn, self }) {
-        this.disconnect(this);
+        this.disconnect();
+        this.#abortControllers = [];
         if (typeof checkValidityOn === 'string') {
-            self.addEventListener(checkValidityOn, this.doCheck);
+            const abortController = new AbortController();
+            this.#abortControllers.push(abortController);
+            self.addEventListener(checkValidityOn, e => {
+                self.checkValidity();
+            }, { signal: abortController.signal });
         }
         else {
             for (const checkOn of checkValidityOn) {
+                const abortController = new AbortController();
+                this.#abortControllers.push(abortController);
                 if (typeof checkOn === 'string') {
-                    self.addEventListener(checkOn, this.doCheck);
+                    self.addEventListener(checkOn, e => {
+                        self.checkValidity();
+                    }, { signal: abortController.signal });
                 }
                 else {
-                    self.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    const options = { ...checkOn.options || {}, signal: abortController.signal };
+                    self.addEventListener(checkOn.type, e => {
+                        self.checkValidity();
+                    }, options);
                 }
             }
         }
@@ -47,9 +61,6 @@ export class BeFormidable extends EventTarget {
     onCheckValidityOnInit({ self }) {
         self.checkValidity();
     }
-    doCheck = (e) => {
-        this.proxy.self.checkValidity();
-    };
     markStatus(target, valid) {
         if (valid) {
             target.classList.remove('invalid');
@@ -60,22 +71,10 @@ export class BeFormidable extends EventTarget {
             target.classList.add('invalid');
         }
     }
-    disconnect({}) {
-        const checkValidityOn = this.#previousCheckValidityOn;
-        if (checkValidityOn === undefined)
-            return;
-        const target = this.proxy.self;
-        if (typeof checkValidityOn === 'string') {
-            target.removeEventListener(checkValidityOn, this.doCheck);
-        }
-        else {
-            for (const checkOn of checkValidityOn) {
-                if (typeof checkOn === 'string') {
-                    target.removeEventListener(checkOn, this.doCheck);
-                }
-                else {
-                    target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
-                }
+    disconnect() {
+        if (this.#abortControllers !== undefined) {
+            for (const abortController of this.#abortControllers) {
+                abortController.abort();
             }
         }
     }

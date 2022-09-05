@@ -1,29 +1,30 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeFormidableActions, BeFormidableProps, BeFormidableVirtualProps, FormCriteria, CheckEventMonitor} from './types';
+import {BeFormidableActions, PP, Proxy, BeFormidableVirtualProps, FormCriteria, CheckEventMonitor} from './types';
 import {register} from 'be-hive/register.js';
 
 export class BeFormidable extends EventTarget implements BeFormidableActions{
     #originalCheckValidity!: () => boolean;
-    intro(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
+    intro(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         const checkValidity = target.checkValidity;
         this.#originalCheckValidity = checkValidity.bind(target);
         
     }
 
-    finale(proxy: HTMLFormElement & BeFormidableProps, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
-        this.disconnect(this);
+    finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
+        this.disconnect();
         
     }
 
-    async onInvalidIf({invalidIf, proxy, self}: this) {
+    async onInvalidIf(pp: PP) {
+        const {invalidIf, proxy, self} = pp;
         const {evalInvalidIf} = await import('./evalInvalidIf.js');
         self.checkValidity = () => {
             if(!this.#originalCheckValidity()){
-                this.objections = ['']; //TODO:  Gather all the invalid messages
+                proxy.objections = ['']; //TODO:  Gather all the invalid messages
                 proxy.isValid = false;
                 return false;
             }
-            const messages = evalInvalidIf(this, self);
+            const messages = evalInvalidIf(pp, self);
             const valid = messages.length === 0;
             this.markStatus(self, valid);
             proxy.objections = messages;
@@ -35,28 +36,37 @@ export class BeFormidable extends EventTarget implements BeFormidableActions{
     }
 
     #previousCheckValidityOn: undefined | string | (string | CheckEventMonitor)[];
-    onCheckValidityOn({checkValidityOn, self}: this): void {
-        this.disconnect(this);
-        
+    #abortControllers: AbortController[] | undefined
+    onCheckValidityOn({checkValidityOn, self}: PP): void {
+        this.disconnect();
+        this.#abortControllers = [];
+
         if(typeof checkValidityOn === 'string'){
-            self.addEventListener(checkValidityOn, this.doCheck);
+            const abortController = new AbortController();
+            this.#abortControllers.push(abortController);
+            self.addEventListener(checkValidityOn, e => {
+                self.checkValidity();
+            }, {signal: abortController.signal});
         }else{
-            for(const checkOn of checkValidityOn){
+            for(const checkOn of checkValidityOn!){
+                const abortController = new AbortController();
+                this.#abortControllers.push(abortController);
                 if(typeof checkOn === 'string'){
-                    self.addEventListener(checkOn, this.doCheck);
+                    self.addEventListener(checkOn, e => {
+                        self.checkValidity();
+                    }, {signal: abortController.signal});
                 }else{
-                    self.addEventListener(checkOn.type, this.doCheck, checkOn.options);
+                    const options = {...checkOn.options || {}, signal: abortController.signal}
+                    self.addEventListener(checkOn.type, e => {
+                        self.checkValidity();
+                    }, options);
                 }
             }
         }
     }
 
-    onCheckValidityOnInit({self}: this): void {
+    onCheckValidityOnInit({self}: PP): void {
         self.checkValidity();
-    }
-
-    doCheck = (e: Event) => {
-        this.proxy.self.checkValidity();
     }
 
     markStatus(target:HTMLFormElement, valid: boolean){
@@ -71,26 +81,16 @@ export class BeFormidable extends EventTarget implements BeFormidableActions{
 
     
 
-    disconnect({}: this){
-        const checkValidityOn = this.#previousCheckValidityOn;
-        if(checkValidityOn === undefined) return;
-        const target = this.proxy.self;
-        if(typeof checkValidityOn === 'string'){
-            target.removeEventListener(checkValidityOn, this.doCheck);
-        }else{
-            for(const checkOn of checkValidityOn){
-                if(typeof checkOn === 'string'){
-                    target.removeEventListener(checkOn, this.doCheck);
-                }else{
-                    target.removeEventListener(checkOn.type, this.doCheck, checkOn.options);
-                }
+    disconnect(){
+        if(this.#abortControllers !== undefined){
+            for(const abortController of this.#abortControllers){
+                abortController.abort();
             }
         }
     }
 
 }
 
-export interface BeFormidable extends BeFormidableProps{}
 
 const tagName = 'be-formidable';
 
@@ -98,7 +98,7 @@ const ifWantsToBe = 'formidable';
 
 const upgrade = 'form';
 
-define<BeFormidableProps & BeDecoratedProps<BeFormidableProps, BeFormidableActions>, BeFormidableActions>({
+define<BeFormidableVirtualProps & BeDecoratedProps<BeFormidableVirtualProps, BeFormidableActions>, BeFormidableActions>({
     config:{
         tagName,
         propDefaults:{

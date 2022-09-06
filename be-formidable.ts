@@ -1,8 +1,8 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeFormidableActions, PP, Proxy, BeFormidableVirtualProps, FormCriteria, CheckEventMonitor} from './types';
+import {Actions, PP, Proxy, VirtualProps, FormCriteria, CheckEventMonitor} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeFormidable extends EventTarget implements BeFormidableActions{
+export class BeFormidable extends EventTarget implements Actions{
     #originalCheckValidity!: () => boolean;
     intro(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void{
         const checkValidity = target.checkValidity;
@@ -98,7 +98,7 @@ const ifWantsToBe = 'formidable';
 
 const upgrade = 'form';
 
-define<BeFormidableVirtualProps & BeDecoratedProps<BeFormidableVirtualProps, BeFormidableActions>, BeFormidableActions>({
+define<VirtualProps & BeDecoratedProps<VirtualProps, Actions>, Actions>({
     config:{
         tagName,
         propDefaults:{

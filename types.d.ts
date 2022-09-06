@@ -1,12 +1,12 @@
 import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
-export interface BeFormidableEndUserProps{
+export interface EndUserProps{
     invalidIf?: FormCriteria[],
     checkValidityOn?: string | (string | CheckEventMonitor)[],
     checkValidityOnInit?: boolean;
 }
 
-export interface BeFormidableVirtualProps extends BeFormidableEndUserProps, MinimalProxy<HTMLFormElement>{
+export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLFormElement>{
     objections: string[],
     checkValidityAttached: boolean;
     isValid: boolean;
@@ -41,15 +41,15 @@ export interface CheckEventMonitor{
     options: AddEventListenerOptions,
 }
 
-export type Proxy = HTMLFormElement & BeFormidableVirtualProps;
+export type Proxy = HTMLFormElement & VirtualProps;
 
-export interface ProxyProps extends BeFormidableVirtualProps{
+export interface ProxyProps extends VirtualProps{
     proxy: Proxy;
 }
 
 export type PP = ProxyProps;
 
-export interface BeFormidableActions{
+export interface Actions{
     intro(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     onInvalidIf(pp: PP): void;

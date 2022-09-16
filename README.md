@@ -147,6 +147,42 @@ Support for such criteria is provided. For example with min:
 </form>
 ```
 
+validIf, equals
+
+```html
+<form be-formidable='{
+    "validOnlyIf":[
+        {
+            "oneOf": [
+                {
+                    "name": "firstCustomer Age",
+                    "min": 17,
+                },
+                {
+                    "name": "secondCustomer Age",
+                    "min": 17,
+                },
+                {
+                    "name": "thirdCustomer Age",
+                    "min": 17,
+                },
+            ],
+            "equals": [
+                {
+                    "name": "hiddenCalculatedField"
+                },
+                {
+                    "name": "payment"
+                }
+            ]
+            "instructions": "No one under the age of 17 is permitted to watch this movie without being accompanied by an adult or guardian"
+        }
+    ]
+}'>
+   ...
+</form>
+```
+
 
 
 ## Specify querySelectorAll() for the elements to be checked

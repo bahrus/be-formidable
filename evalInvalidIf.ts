@@ -3,7 +3,7 @@ import {PP, FieldOptions} from './types';
 export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
     const messages: string[] = [];
     for(const criteria of invalidIf!){
-        const {noneOf} = criteria;
+        const {noneOf, } = criteria;
         if(noneOf === undefined) continue; // support other rules in the future
         const noneOfLookup: {[key: string]: FieldOptions} = {};
         const findBasedNoneOfs: FieldOptions[] = [];
@@ -28,14 +28,55 @@ export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
         const elements = target.elements;
         let found = false;
         for(const input of elements){
-            const inputT = input as HTMLFormElement;
+            const inputT = input as HTMLInputElement;
+            
             const name = inputT.name || inputT.id;
             if(name === undefined) continue;
-            const field = noneOfLookup[name];
-            if(field === undefined){
+            const fieldCriteria = noneOfLookup[name];
+            if(fieldCriteria === undefined){
                 continue;
             }
-            if(inputT[field.prop]){ //TODO support nested props
+            const {prop, min, max} = fieldCriteria;
+            const {type} = inputT;
+            if(min !== undefined){
+                switch(type){
+                    case 'number':
+                    case 'range':
+                        if(inputT.valueAsNumber < min){
+                            continue;
+                        }
+                        break;
+                    case 'date':
+                        if(inputT.valueAsDate! < min){
+                            continue;
+                        }
+                        break;
+                    default:
+                        if(inputT.value < min){
+                            continue;
+                        }
+                }
+            }
+            if(max !== undefined){
+                switch(type){
+                    case 'number':
+                    case 'range':
+                        if(inputT.valueAsNumber > max){
+                            continue;
+                        }
+                        break;
+                    case 'date':
+                        if(inputT.valueAsDate! > max){
+                            continue;
+                        }
+                        break;
+                    default:
+                        if(inputT.value > max){
+                            continue;
+                        }
+                }
+            }
+            if((<any>inputT)[prop]){ //TODO support nested props
                 found = true;
                 break;
             }
@@ -58,7 +99,7 @@ export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
         }
         if(!found){
             const {invalidMessage, instructions} = criteria;
-            messages.push(invalidMessage || instructions);
+            messages.push(invalidMessage || instructions || 'invalid');
         }
 
     }

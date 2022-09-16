@@ -147,7 +147,7 @@ Support for such criteria is provided. For example with min:
 </form>
 ```
 
-validIf, equals
+NotEquals
 
 ```html
 <form be-formidable='{

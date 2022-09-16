@@ -13,9 +13,9 @@ export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLFormElement
 }
 
 export interface FormCriteria{
-    noneOf: (string | FieldOptions)[],
-    instructions: string,
-    invalidMessage: string,
+    noneOf?: (string | FieldOptions)[],
+    instructions?: string,
+    invalidMessage?: string,
 }
 
 export interface FieldIdentifierOptions {
@@ -28,8 +28,8 @@ export interface FieldIdentifierOptions {
 export interface FieldValidationOptions{
     disabled?: boolean,
     required?: boolean,
-    min?: number,
-    max?: number,
+    min?: number | Date | string,
+    max?: number | Date | string,
     pattern?: string,
     type?: string,
 }

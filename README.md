@@ -170,7 +170,7 @@ Support for such criteria is provided. For example with min:
 ## Side effect of calling checkValidity()
 
 
-"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "formidable::objections-changed", emitted from the form element (no bubbles / composed). 
+"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "be-decorated.formidable.objections-changed", emitted from the form element (no bubbles / composed). We can also attach an event listener to formElement.beDecorated.formidable.controller with name "objections-changed".  Another event that fires is "is-valid-changed", with the same name-spacing.
 
 ## Specify to monitor for certain events.
 

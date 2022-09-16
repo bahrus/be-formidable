@@ -153,7 +153,7 @@ validIf, equals
 <form be-formidable='{
     "validOnlyIf":[
         {
-            "oneOf": [
+            "atLeastOneOf": [
                 {
                     "name": "firstCustomer Age",
                     "min": 17,

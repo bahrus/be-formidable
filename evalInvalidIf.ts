@@ -36,7 +36,7 @@ export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
             if(fieldCriteria === undefined){
                 continue;
             }
-            const {prop, min, max} = fieldCriteria;
+            const {prop, min, max, enabled, pattern} = fieldCriteria;
             const {type} = inputT;
             if(min !== undefined){
                 switch(type){
@@ -76,9 +76,16 @@ export function evalInvalidIf({proxy, invalidIf}: PP, target: HTMLFormElement){
                         }
                 }
             }
+            if(enabled){
+                if(inputT.disabled) continue;
+            }
             if((<any>inputT)[prop]){ //TODO support nested props
                 found = true;
                 break;
+            }
+            if(pattern !== undefined){
+                const reg = new RegExp(pattern);
+                if(inputT.value.match(reg)) continue;
             }
         }
         if(!found){

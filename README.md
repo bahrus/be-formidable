@@ -115,7 +115,7 @@ So this syntax is not compatible with form elements that use "." in the name.  I
 </form>
 ```
 
-## Other validation criteria [TODO]
+## Other validation criteria [Untested]
 
 The rules so far have essentially been providing support for the "required" attribute, but for groups of form elements.  But there are other validations that form fields support (min, max, pattern, etc).  
 

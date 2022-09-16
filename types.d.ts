@@ -26,7 +26,7 @@ export interface FieldIdentifierOptions {
 }
 
 export interface FieldValidationOptions{
-    disabled?: boolean,
+    enabled?: boolean,
     required?: boolean,
     min?: number | Date | string,
     max?: number | Date | string,

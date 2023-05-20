@@ -29,13 +29,14 @@
     "package-check": "package-check"
   },
   "dependencies": {
-    "be-decorated": "0.0.182",
-    "be-hive": "0.0.76"
+    "be-enhanced": "0.0.19",
+    "be-hive": "0.0.93",
+    "trans-render": "0.0.681",
+    "xtal-element": "0.0.561"
   },
   "devDependencies": {
-    "@playwright/test": "1.27.1",
-    "@skypack/package-check": "0.2.2",
-    "may-it-serve": "0.0.3"
+    "@playwright/test": "1.33.0",
+    "may-it-serve": "0.0.5"
   },
   "repository": {
     "type": "git",

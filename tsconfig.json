@@ -9,9 +9,7 @@
 		"watch": true
 	},
 	"files": [
-		"be-formidable.ts",
-		//"playwright.config.ts",
-		//"tests/test1.spec.mts",
+		"be-formidable2.ts",
 	],
 	"exclude":[
 		"node_modules"

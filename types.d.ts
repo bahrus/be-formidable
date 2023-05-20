@@ -1,12 +1,13 @@
-import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
+import { ActionOnEventConfigs } from "trans-render/froop/types";
+import {IBE} from 'be-enhanced/types';
 
-export interface EndUserProps{
+export interface EndUserProps extends IBE<HTMLFormElement>{
     invalidIf?: FormCriteria[],
     checkValidityOn?: string | (string | CheckEventMonitor)[],
     checkValidityOnInit?: boolean;
 }
 
-export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLFormElement>{
+export interface AllProps extends EndUserProps{
     objections: string[],
     checkValidityAttached: boolean;
     isValid: boolean;
@@ -41,18 +42,20 @@ export interface CheckEventMonitor{
     options: AddEventListenerOptions,
 }
 
-export type Proxy = HTMLFormElement & VirtualProps;
+export type AP = AllProps;
 
-export interface ProxyProps extends VirtualProps{
-    proxy: Proxy;
-}
+export type PAP = Partial<AP>;
 
-export type PP = ProxyProps;
+export type ProPAP = Promise<PAP>;
+
+export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
+
+
 
 export interface Actions{
-    intro(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
-    onInvalidIf(pp: PP): void;
-    onCheckValidityOn(pp: PP): void;
-    onCheckValidityOnInit(pp: PP): void;
+    //intro(self: this, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
+    //finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
+    onInvalidIf(self: this): Promise<void>;
+    onCheckValidityOn(self: this): void;
+    onCheckValidityOnInit(self: this): void;
 }

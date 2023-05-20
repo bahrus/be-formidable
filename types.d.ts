@@ -53,8 +53,6 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>]
 
 
 export interface Actions{
-    //intro(self: this, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
-    //finale(proxy: Proxy, target: HTMLFormElement, beDecorProps: BeDecoratedProps): void;
     onInvalidIf(self: this): Promise<void>;
     onCheckValidityOn(self: this): void;
     onCheckValidityOnInit(self: this): void;

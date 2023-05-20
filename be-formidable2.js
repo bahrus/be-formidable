@@ -2,6 +2,11 @@ import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
 export class BeFormidable extends BE {
+    static get beConfig() {
+        return {
+            parse: true,
+        };
+    }
     #originalCheckValidity;
     async attach(enhancedElement, enhancementInfo) {
         const checkValidity = enhancedElement.checkValidity;
@@ -24,6 +29,7 @@ export class BeFormidable extends BE {
             self.isValid = valid;
             return valid;
         };
+        enhancedElement.classList.add('be-formidable');
         self.checkValidityAttached = true;
         self.resolved = true;
     }
@@ -95,7 +101,13 @@ const xe = new XE({
         propInfo: {
             ...propInfo
         },
-        actions: {}
+        actions: {
+            onInvalidIf: 'invalidIf',
+            onCheckValidityOn: 'checkValidityOn',
+            onCheckValidityOnInit: {
+                ifAllOf: ['checkValidityOnInit', 'checkValidityAttached']
+            }
+        }
     },
     superclass: BeFormidable
 });

@@ -5,6 +5,12 @@ import {Actions, AllProps, AP, PAP, ProPAP, POA} from './types';
 import {register} from 'be-hive/register.js';
 
 export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements Actions{
+    static  override get beConfig(){
+        return {
+            parse: true,
+        } as BEConfig
+    }
+    
     #originalCheckValidity!: () => boolean;
 
     override async attach(enhancedElement: HTMLFormElement, enhancementInfo: EnhancementInfo) {
@@ -29,6 +35,7 @@ export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements A
             self.isValid = valid;
             return valid;
         }
+        enhancedElement.classList.add('be-formidable')
         self.checkValidityAttached = true;
         self.resolved = true;
     }
@@ -107,7 +114,11 @@ const xe = new XE<AP, Actions>({
             ...propInfo
         },
         actions: {
-            
+            onInvalidIf: 'invalidIf',
+            onCheckValidityOn: 'checkValidityOn',
+            onCheckValidityOnInit: {
+                ifAllOf: ['checkValidityOnInit', 'checkValidityAttached']
+            }
         }
     },
     superclass: BeFormidable

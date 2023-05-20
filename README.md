@@ -267,10 +267,10 @@ Suggested CSS:
 
 ```html
 <style>
-    form:invalid, form[is-formidable].invalid {
+    form:invalid, form.be-formidable.invalid {
         border: 5px solid red;
     }
-    form:valid, form[is-formidable].valid {
+    form:valid, form.be-formidable.valid {
         border: 5px solid green;
     }
 </style>

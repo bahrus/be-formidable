@@ -34,7 +34,7 @@ Add additional validations on form element beyond those that can be specified on
 </form>
 ```
 
-Attaching this decorator / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
+Attaching this enhancement / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
 
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
 
@@ -42,7 +42,7 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 
 It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  Here's why:
 
-This component prefers the "innocent until proven guilty" way of thinking, because it feels a bit truer to what it is actually doing, and may more effectively alert the developer to the fact that the form will be considered valid until the be-formidable behavior / decorator is attached.  Before then, it might be prudent to hide/disable any submit buttons, or even hide or obscure the entire form.
+This component prefers the "innocent until proven guilty" way of thinking, because it feels a bit truer to what it is actually doing, and may more effectively alert the developer to the fact that the form will be considered valid until the be-formidable behavior / enhancement is attached.  Before then, it might be prudent to hide/disable any submit buttons, or even hide or obscure the entire form.
 
 ## Naming
 
@@ -206,7 +206,7 @@ NotEquals
 ## Side effect of calling checkValidity()
 
 
-"objections" is an array of strings that is stored at location formElement.beDecorated.formidable.objections.  It lists validation errors.  The array is also posted with event "be-decorated.formidable.objections-changed", emitted from the form element (no bubbles / composed). We can also attach an event listener to formElement.beDecorated.formidable.controller with name "objections-changed".  Another event that fires is "is-valid-changed", with the same name-spacing.
+"objections" is an array of strings that is stored at location formElement.beEnhanced.beFormidable.objections.  It lists validation errors.  
 
 ## Specify to monitor for certain events.
 
@@ -261,7 +261,7 @@ Unfortunately, the platform does not yet support specifying a custom validation 
 
 This means that the :valid and :invalid pseudo-classes are not adjusted as needed.
 
-The be-formidable decorator does set "valid" or "invalid" classes during the checkValidity() calls.
+The be-formidable enhancement does set "valid" or "invalid" classes during the checkValidity() calls.
 
 Suggested CSS:
 

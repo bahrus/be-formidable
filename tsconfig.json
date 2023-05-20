@@ -9,7 +9,7 @@
 		"watch": true
 	},
 	"files": [
-		"be-formidable2.ts",
+		"be-formidable.ts",
 	],
 	"exclude":[
 		"node_modules"

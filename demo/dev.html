@@ -23,10 +23,10 @@
         <input name=file id=file type=file>
     </form>
     <style>
-        form:invalid, form[is-formidable].invalid {
+        form:invalid, form.be-formidable.invalid {
             border: 5px solid red;
         }
-        form:valid, form[is-formidable].valid {
+        form:valid, form.be-formidable.valid {
             border: 5px solid green;
         }
     </style>
@@ -34,10 +34,10 @@
     <script type=importmap>
         {
             "imports": {
+                "be-enhanced/": "../node_modules/be-enhanced/",
+                "be-hive/": "../node_modules/be-hive/",
                 "trans-render/": "../node_modules/trans-render/",
-                "xtal-element/": "../node_modules/xtal-element/",
-                "be-decorated/": "../node_modules/be-decorated/",
-                "be-hive/": "../node_modules/be-hive/"
+                "xtal-element/": "../node_modules/xtal-element/"
             }
         }
     </script>

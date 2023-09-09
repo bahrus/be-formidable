@@ -26,16 +26,17 @@
   "scripts": {
     "test": "playwright test",
     "serve": "node node_modules/may-it-serve",
-    "package-check": "package-check"
+    "package-check": "package-check",
+    "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "be-enhanced": "0.0.19",
-    "be-hive": "0.0.93",
-    "trans-render": "0.0.681",
-    "xtal-element": "0.0.561"
+    "be-enhanced": "0.0.50",
+    "be-hive": "0.0.121",
+    "trans-render": "0.0.705",
+    "xtal-element": "0.0.578"
   },
   "devDependencies": {
-    "@playwright/test": "1.33.0",
+    "@playwright/test": "1.37.1",
     "may-it-serve": "0.0.5"
   },
   "repository": {

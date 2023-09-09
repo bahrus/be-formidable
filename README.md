@@ -1,12 +1,9 @@
 # be-formidable
 
 [![Playwright Tests](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml)
-
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-formidable?style=for-the-badge)](https://bundlephobia.com/result?p=be-formidable)
-
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-formidable?compression=gzip">
-
-<a href="https://nodei.co/npm/be-formidable/"><img src="https://nodei.co/npm/be-formidable.png"></a>
+[![NPM version](https://badge.fury.io/js/be-formidable.png)](http://badge.fury.io/js/be-formidable)
 
 [![None Shall Pass](https://i.imgflip.com/2mj99q.jpg)](https://imgflip.com/tag/monty+python+black+knight)
 

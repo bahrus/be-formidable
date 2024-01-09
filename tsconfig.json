@@ -6,10 +6,9 @@
 		"experimentalDecorators": false,
 		"newLine": "LF",
 		"strict": true,
-		"watch": true
 	},
 	"files": [
-		"be-formidable.ts",
+		"behivior.ts",
 	],
 	"exclude":[
 		"node_modules"

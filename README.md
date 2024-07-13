@@ -1,4 +1,4 @@
-# be-formidable
+# be-formidable (🥷)
 
 [![Playwright Tests](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-formidable/actions/workflows/CI.yml)
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-formidable?style=for-the-badge)](https://bundlephobia.com/result?p=be-formidable)

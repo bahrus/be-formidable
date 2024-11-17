@@ -17,6 +17,52 @@ class BeFormidable extends BE {
      * @type {BEConfig<BAP, Actions & IEnhancement, any>}
      */
     static config = {
+        propDefaults:{
+            checkValidityOnInit: true,
+            checkValidityOn: 'input',
+            updateCnt: 0,
+        },
+        propInfo: {
+            ...propInfo,
+
+        },
+        compacts:{
+
+        },
+        actions: {
+
+        }
+    }
+
+    /**
+     * @type {AbortController | undefined;}
+     */
+    #abortController;
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    async hydrate(self){
+        this.#disconnect();
+        this.#abortController = new AbortController();
+        const signal = this.#abortController.signal;
+        const {checkValidityOn, enhancedElement} = self;
+        if(typeof checkValidityOn === 'string'){
+            enhancedElement.addEventListener(checkValidityOn, this, {signal})
+        }else{
+            for(const checkOn of checkValidityOn){
+                if(typeof checkOn === 'string'){
+                    enhancedElement.addEventListener(checkOn, this, {signal});
+                }else{
+                    const options = {...checkOn.options || {}, signal}
+                    enhancedElement.addEventListener(checkOn.type, this, options);
+                }
+            }
+        }
+        return /** @type {PAP} */({
+            resolved: true
+        });
     }
 
     /**
@@ -24,6 +70,17 @@ class BeFormidable extends BE {
      * @param {Event=} e
      */
     handleEvent(e){
+        const self = /** @type {BAP} *//** @type {any} */(this);
+        if(e?.type === 'submit'){
+            e.preventDefault();
+        }
+        self.updateCnt++;
+    }
+
+    #disconnect(){
+        if(this.#abortController !== undefined){
+            this.#abortController.abort();
+        }
     }
 }
 

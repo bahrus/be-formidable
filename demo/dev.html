@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- #include virtual="/imports.html" -->
 </head>
 <body>
     <form be-formidable='{
@@ -31,18 +32,9 @@
         }
     </style>
     
-    <script type=importmap>
-        {
-            "imports": {
-                "be-enhanced/": "../node_modules/be-enhanced/",
-                "be-hive/": "../node_modules/be-hive/",
-                "trans-render/": "../node_modules/trans-render/",
-                "xtal-element/": "../node_modules/xtal-element/"
-            }
-        }
-    </script>
+
     <script type=module>
-        import '../be-formidable.js';
+        import '/be-formidable.js';
     </script>
 </body>
 </html>

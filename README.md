@@ -13,7 +13,7 @@ Add additional validations on the form element, beyond those that can be specifi
 <form be-formidable='{
     "invalidIf":[
         {
-            "noneOf": ["url", "file"],
+            "noneOf": ["@url", "@file"],
             "instructions": "Please Select a url or a file",
             "invalidMessage": "No url or file selected"
 
@@ -37,7 +37,7 @@ The markup above does not, however, *automatically call* checkValidity.  To spec
 
 ## Why two negatives?
 
-It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  Here's why:
+It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  Here's why we chose the more counterintuitive approach:
 
 This component prefers the "innocent until proven guilty" way of thinking, because it feels a bit truer to what it is actually doing, and may more effectively alert the developer to the fact that the form will be considered valid until the be-formidable behavior / enhancement is attached.  Before then, it might be prudent to hide/disable any submit buttons, or even hide or obscure the entire form.
 
@@ -45,7 +45,7 @@ This component prefers the "innocent until proven guilty" way of thinking, becau
 
 Editing JSON-in-html can be rather error prone.  A [VS Code extension](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to help with that, and is compatible with web versions of VSCode.
 
-And in practice, it is also quite ergonomic to edit these types of attributes in a *.mjs file that executes in (no)de(no) as the file changes, and compiles to an html file via the [may-it-be](https://github.com/bahrus/may-it-be) compiler, for example.  This allows the attributes to be editable with JS-like syntax.  Typescript 4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
+And in practice, it is also quite ergonomic to edit these types of attributes in a *.mjs file that executes in (no)de(no) as the file changes, and compiles to an html file via the [be-importing](https://github.com/bahrus/be-importing) compiler, for example.  This allows the attributes to be editable with JS-like syntax.  Typescript 4.6 supports compiling mts to mjs files, which then allows typing of the attributes.  Examples of this in practice are:
 
 1.  [xtal-side-nav](https://github.com/bahrus/xtal-side-nav)
 2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
@@ -62,7 +62,7 @@ To specify an alternative property to check:
     "invalidIf":[
         {
             "noneOf": ["keysInPocket.checked", "havePhone.checked"],
-            "instructions": "Please take your keys, or at least a phone to call for a locksmith.",
+            "instructions": "Please take your keys, or at least a phone to call a locksmith.",
             "invalidMessage": "Not ready to go out."
         }
     ]

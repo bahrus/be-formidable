@@ -1,28 +1,22 @@
-import {BE, propDefaults, propInfo} from 'be-enhanced/BE.js';
-import {BEConfig, EnhancementInfo} from 'be-enhanced/types';
-import {XE} from 'xtal-element/XE.js';
-import {Actions, AllProps, AP, PAP, ProPAP, POA} from './types';
-
-export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements Actions{
-    static  override get beConfig(){
+import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
+import { XE } from 'xtal-element/XE.js';
+export class BeFormidable extends BE {
+    static get beConfig() {
         return {
             parse: true,
-        } as BEConfig
+        };
     }
-    
-    #originalCheckValidity!: () => boolean;
-
-    override async attach(enhancedElement: HTMLFormElement, enhancementInfo: EnhancementInfo) {
+    #originalCheckValidity;
+    async attach(enhancedElement, enhancementInfo) {
         const checkValidity = enhancedElement.checkValidity;
         this.#originalCheckValidity = checkValidity.bind(enhancedElement);
         await super.attach(enhancedElement, enhancementInfo);
     }
-
-    async onInvalidIf(self: this) {
-        const {invalidIf, enhancedElement} = self;
-        const {evalInvalidIf} = await import('./evalInvalidIf.js');
+    async onInvalidIf(self) {
+        const { invalidIf, enhancedElement } = self;
+        const { evalInvalidIf } = await import('../evalInvalidIf.js');
         enhancedElement.checkValidity = () => {
-            if(!this.#originalCheckValidity()){
+            if (!this.#originalCheckValidity()) {
                 self.objections = ['']; //TODO:  Gather all the invalid messages
                 self.isValid = false;
                 return false;
@@ -33,43 +27,43 @@ export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements A
             self.objections = messages;
             self.isValid = valid;
             return valid;
-        }
-        enhancedElement.classList.add('be-formidable')
+        };
+        enhancedElement.classList.add('be-formidable');
         self.checkValidityAttached = true;
         self.resolved = true;
     }
-
-    markStatus(target:HTMLFormElement, valid: boolean){
-        if(valid){
+    markStatus(target, valid) {
+        if (valid) {
             target.classList.remove('invalid');
             target.classList.add('valid');
-        }else{
+        }
+        else {
             target.classList.remove('valid');
             target.classList.add('invalid');
         }
     }
-
-    onCheckValidityOn(self: this): void {
-        const {checkValidityOn, enhancedElement} = self;
+    onCheckValidityOn(self) {
+        const { checkValidityOn, enhancedElement } = self;
         this.disconnect();
         this.#abortControllers = [];
-
-        if(typeof checkValidityOn === 'string'){
+        if (typeof checkValidityOn === 'string') {
             const abortController = new AbortController();
             this.#abortControllers.push(abortController);
             enhancedElement.addEventListener(checkValidityOn, e => {
                 enhancedElement.checkValidity();
-            }, {signal: abortController.signal});
-        }else{
-            for(const checkOn of checkValidityOn!){
+            }, { signal: abortController.signal });
+        }
+        else {
+            for (const checkOn of checkValidityOn) {
                 const abortController = new AbortController();
                 this.#abortControllers.push(abortController);
-                if(typeof checkOn === 'string'){
+                if (typeof checkOn === 'string') {
                     enhancedElement.addEventListener(checkOn, e => {
                         enhancedElement.checkValidity();
-                    }, {signal: abortController.signal});
-                }else{
-                    const options = {...checkOn.options || {}, signal: abortController.signal}
+                    }, { signal: abortController.signal });
+                }
+                else {
+                    const options = { ...checkOn.options || {}, signal: abortController.signal };
                     enhancedElement.addEventListener(checkOn.type, e => {
                         enhancedElement.checkValidity();
                     }, options);
@@ -77,37 +71,30 @@ export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements A
             }
         }
     }
-
-    onCheckValidityOnInit(self: this): void {
-        const {enhancedElement} = self;
+    onCheckValidityOnInit(self) {
+        const { enhancedElement } = self;
         enhancedElement.checkValidity();
     }
-    
-    #abortControllers: AbortController[] | undefined;
-    disconnect(){
-        if(this.#abortControllers !== undefined){
-            for(const abortController of this.#abortControllers){
+    #abortControllers;
+    disconnect() {
+        if (this.#abortControllers !== undefined) {
+            for (const abortController of this.#abortControllers) {
                 abortController.abort();
             }
         }
     }
-    override detach(detachedElement: HTMLFormElement): void {
+    detach(detachedElement) {
         this.disconnect();
     }
 }
-
-export interface BeFormidable extends AllProps{}
-
 export const tagName = 'be-formidable';
-
-
-const xe = new XE<AP, Actions>({
-    config:{
+const xe = new XE({
+    config: {
         tagName,
         propDefaults: {
             ...propDefaults,
             checkValidityOnInit: true,
-        }, 
+        },
         propInfo: {
             ...propInfo
         },

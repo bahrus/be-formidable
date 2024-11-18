@@ -2,6 +2,7 @@
 import { BE } from 'be-enhanced/BE.js';
 import { propInfo, resolved, rejected } from 'be-enhanced/cc.js';
 import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
+import {evalInvalidIf} from './evalInvalidIf.js';
 
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP,  AP, BAP} from './ts-refs/be-formidable/types' */;
@@ -27,7 +28,7 @@ class BeFormidable extends BE {
 
         },
         compacts:{
-
+            when_checkValidityOn_changes_invoke_hydrate: 0,
         },
         actions: {
 
@@ -39,6 +40,12 @@ class BeFormidable extends BE {
      */
     #abortController;
 
+    #attachedCheckValidity = false;
+
+    /**
+     * @type {() => boolean}
+     */
+    #originalCheckValidity;
     /**
      * 
      * @param {BAP} self 
@@ -48,6 +55,7 @@ class BeFormidable extends BE {
         this.#abortController = new AbortController();
         const signal = this.#abortController.signal;
         const {checkValidityOn, enhancedElement} = self;
+        
         if(typeof checkValidityOn === 'string'){
             enhancedElement.addEventListener(checkValidityOn, this, {signal})
         }else{
@@ -60,9 +68,44 @@ class BeFormidable extends BE {
                 }
             }
         }
+        if(!this.#attachedCheckValidity){
+            const checkValidity = enhancedElement.checkValidity;
+            this.#originalCheckValidity = checkValidity.bind(enhancedElement);
+            enhancedElement.checkValidity = () => {
+                if(!this.#originalCheckValidity()){
+                    self.objections = ['']; //TODO:  Gather all the invalid messages
+                    self.isValid = false;
+                    return false;
+                }
+                
+                const objections = evalInvalidIf(self, enhancedElement);
+                const valid = objections.length === 0;
+                this.#markStatus(enhancedElement, valid);
+                self.objections = objections;
+                self.isValid = valid;
+                return valid;
+            }
+            this.#attachedCheckValidity = true;
+        }
+        enhancedElement.checkValidity();
         return /** @type {PAP} */({
             resolved: true
         });
+    }
+
+    /**
+     * 
+     * @param {HTMLFormElement} target 
+     * @param {boolean} valid 
+     */
+    #markStatus(target, valid){
+        if(valid){
+            target.classList.remove('invalid');
+            target.classList.add('valid');
+        }else{
+            target.classList.remove('valid');
+            target.classList.add('invalid');
+        }
     }
 
     /**

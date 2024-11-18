@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id=form>
+        <input name=hello required>
+    </form>
+    <script>
+        const checkValidity = form.checkValidity;
+        const originalCheckValidity = checkValidity.bind(form);
+        form.checkValidity = () => {
+            console.log('hello');
+            return originalCheckValidity();
+        }
+        console.log(form.checkValidity());
+    </script>
+</body>
+</html>

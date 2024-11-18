@@ -78,7 +78,7 @@ class BeFormidable extends BE {
                     return false;
                 }
                 
-                const objections = evalInvalidIf(self, enhancedElement);
+                const objections = evalInvalidIf(self);
                 const valid = objections.length === 0;
                 this.#markStatus(enhancedElement, valid);
                 self.objections = objections;

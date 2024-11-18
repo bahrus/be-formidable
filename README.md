@@ -16,7 +16,6 @@ Add additional validations on the form element, beyond those that can be specifi
             "noneOf": ["@url", "@file"],
             "instructions": "Please Select a url or a file",
             "invalidMessage": "No url or file selected"
-
         }
     ]
 }'>

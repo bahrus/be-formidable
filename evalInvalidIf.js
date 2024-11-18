@@ -1,4 +1,13 @@
-export function evalInvalidIf({ proxy, invalidIf }, target) {
+// @ts-check
+/** @import {Actions, PAP,  AP, BAP} from './ts-refs/be-formidable/types' */;
+
+/**
+ * 
+ * @param {BAP} self 
+ * @returns 
+ */
+export function evalInvalidIf(self) {
+    const {invalidIf, enhancedElement} = self;
     const messages = [];
     for (const criteria of invalidIf) {
         const { noneOf, } = criteria;
@@ -27,77 +36,79 @@ export function evalInvalidIf({ proxy, invalidIf }, target) {
                 }
             }
         }
-        const elements = target.elements;
+        const elements = enhancedElement.elements;
         let found = false;
         for (const input of elements) {
-            const inputT = input;
-            const name = inputT.name || inputT.id;
-            if (name === undefined)
-                continue;
-            const fieldCriteria = noneOfLookup[name];
-            if (fieldCriteria === undefined) {
-                continue;
-            }
-            const { prop, min, max, enabled, pattern } = fieldCriteria;
-            const { type } = inputT;
-            if (min !== undefined) {
-                switch (type) {
-                    case 'number':
-                    case 'range':
-                        if (inputT.valueAsNumber < min) {
-                            continue;
-                        }
-                        break;
-                    case 'date':
-                        if (inputT.valueAsDate < min) {
-                            continue;
-                        }
-                        break;
-                    default:
-                        if (inputT.value < min) {
-                            continue;
-                        }
+            if(input instanceof HTMLInputElement){
+                const name = input.name || input.id;
+                if (name === undefined)
+                    continue;
+                const fieldCriteria = noneOfLookup[name];
+                if (fieldCriteria === undefined) {
+                    continue;
+                }
+                const { prop, min, max, enabled, pattern } = fieldCriteria;
+                const { type } = input;
+                if (min !== undefined) {
+                    switch (type) {
+                        case 'number':
+                        case 'range':
+                            if (input.valueAsNumber < min) {
+                                continue;
+                            }
+                            break;
+                        case 'date':
+                            if (input.valueAsDate && input.valueAsDate < min) {
+                                continue;
+                            }
+                            break;
+                        default:
+                            if (input.value < min) {
+                                continue;
+                            }
+                    }
+                }
+                if (max !== undefined) {
+                    switch (type) {
+                        case 'number':
+                        case 'range':
+                            if (input.valueAsNumber > max) {
+                                continue;
+                            }
+                            break;
+                        case 'date':
+                            if (input.valueAsDate && input.valueAsDate > max) {
+                                continue;
+                            }
+                            break;
+                        default:
+                            if (input.value > max) {
+                                continue;
+                            }
+                    }
+                }
+                if (enabled) {
+                    if (input.disabled)
+                        continue;
+                }
+                if (input[prop]) { //TODO support nested props
+                    found = true;
+                    break;
+                }
+                if (pattern !== undefined) {
+                    const reg = new RegExp(pattern);
+                    if (input.value.match(reg))
+                        continue;
                 }
             }
-            if (max !== undefined) {
-                switch (type) {
-                    case 'number':
-                    case 'range':
-                        if (inputT.valueAsNumber > max) {
-                            continue;
-                        }
-                        break;
-                    case 'date':
-                        if (inputT.valueAsDate > max) {
-                            continue;
-                        }
-                        break;
-                    default:
-                        if (inputT.value > max) {
-                            continue;
-                        }
-                }
-            }
-            if (enabled) {
-                if (inputT.disabled)
-                    continue;
-            }
-            if (inputT[prop]) { //TODO support nested props
-                found = true;
-                break;
-            }
-            if (pattern !== undefined) {
-                const reg = new RegExp(pattern);
-                if (inputT.value.match(reg))
-                    continue;
-            }
+
         }
         if (!found) {
             for (const field of findBasedNoneOfs) {
                 const { find } = field;
                 if (find === undefined)
                     continue;
-                const elements = Array.from(target.querySelectorAll(find));
+                const elements = Array.from(enhancedElement.querySelectorAll(find));
                 for (const element of elements) {
                     if (element[field.prop]) { //TODO support nested props
                         found = true;

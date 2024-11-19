@@ -8,6 +8,12 @@ import { BeHive, seed, MountObserver } from 'be-hive/be-hive.js';
 export const emc = {
     base: 'be-formidable',
     enhPropKey: 'beFormidable',
+    map: {
+        '0.0': {
+            instanceOf: 'Object',
+            mapsTo: '.',
+        },
+    },
     importEnh: async () => {
         const { BeFormidable } = 
         /** @type {{new(): IEnhancement<HTMLFormElement>}} */ 

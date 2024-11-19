@@ -25,13 +25,18 @@ class BeFormidable extends BE {
         },
         propInfo: {
             ...propInfo,
-
+            invalidIf: {},
+            isValid: {}
         },
         compacts:{
-            when_checkValidityOn_changes_invoke_hydrate: 0,
+            //when_checkValidityOn_changes_invoke_hydrate: 0,
+            when_isValid_changes_invoke_markStatus: 0,
         },
         actions: {
-
+            hydrate:{
+                ifAllOf: ['checkValidityOn'],
+                ifAtLeastOneOf: ['invalidIf']
+            },
         }
     }
 
@@ -80,7 +85,6 @@ class BeFormidable extends BE {
                 
                 const objections = evalInvalidIf(self);
                 const valid = objections.length === 0;
-                this.#markStatus(enhancedElement, valid);
                 self.objections = objections;
                 self.isValid = valid;
                 return valid;
@@ -95,18 +99,20 @@ class BeFormidable extends BE {
 
     /**
      * 
-     * @param {HTMLFormElement} target 
-     * @param {boolean} valid 
+     * @param {BAP} self 
      */
-    #markStatus(target, valid){
-        if(valid){
-            target.classList.remove('invalid');
-            target.classList.add('valid');
+    markStatus(self){
+        const {enhancedElement, isValid} = self;
+        if(isValid){
+            enhancedElement.classList.remove('invalid');
+            enhancedElement.classList.add('valid');
         }else{
-            target.classList.remove('valid');
-            target.classList.add('invalid');
+            enhancedElement.classList.remove('valid');
+            enhancedElement.classList.add('invalid');
         }
     }
+
+
 
     /**
      * 

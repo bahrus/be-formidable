@@ -77,6 +77,8 @@ And in practice, it is also quite ergonomic to edit these types of attributes in
 
 ## Specifying property to check for truthiness
 
+The specifier for which elements to monitor follows the [DSS syntax](https://github.com/bahrus/trans-render/wiki/VIII.--Directed-Scoped-Specifiers-(DSS)).
+
 By default, the "value" property is what is used on the element when it is checked for truthiness.
 
 To specify an alternative property to check:
@@ -85,16 +87,20 @@ To specify an alternative property to check:
 <form be-formidable='{
     "invalidIf":[
         {
-            "noneOf": ["keysInPocket.checked", "havePhone.checked"],
+            "noneOf": ["@keysInPocket.checked", "@havePhone.checked"],
             "instructions": "Please take your keys, or at least a phone to call a locksmith.",
             "invalidMessage": "Not ready to go out."
         }
     ]
 }'>
-   <input name=keysInPocket id=keysInPocket type=checkbox>
-    <label for=keysInPocket>I have keys in my pocket</label>
-    <input name=havePhone id=havePhone type=checkbox>
-    <label for=havePhone>I have a phone</label>
+    <label>
+        <input name=keysInPocket type=checkbox>
+        I have keys in my pocket
+    </label>
+    <label>
+        <input name=havePhone type=checkbox>
+        I have a phone
+    </label>
 </form>
 ```
 

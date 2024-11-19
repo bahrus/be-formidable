@@ -14,8 +14,7 @@ Add additional validations on the form element, beyond those that can be specifi
     "invalidIf":[
         {
             "noneOf": ["@url", "@file"],
-            "instructions": "Please Select a url or a file",
-            "invalidMessage": "No url or file selected"
+            "invalidCssClass": "no-url-or-file-selected"
         }
     ]
 }'>

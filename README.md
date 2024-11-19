@@ -34,6 +34,31 @@ Attaching this enhancement / behavior results in overriding the checkValidity() 
 
 The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
 
+## Shorter, alternative names
+
+It is easy to define a custom, (shorter) name for less formal environments.  *be-formidable* is the canonical name, but by referencing [an alternative registration file](https://github.com/bahrus/be-formidable/blob/baseline/%F0%9F%A5%B7%F0%9F%8F%BE.js) we can use:
+
+```html
+<form 🥷🏾='{
+    "invalidIf":[
+        {
+            "noneOf": ["@url", "@file"],
+            "instructions": "Please Select a url or a file",
+            "invalidMessage": "No url or file selected"
+        }
+    ]
+}'>
+    <label>
+        URL:
+        <input name=url id=url type=url>
+    </label>
+    <label>
+        File:
+        <input name=file id=file type=file>
+    </label>
+</form>
+```
+
 ## Why two negatives?
 
 It could be argued that validOnlyIf/oneOf is clearer than invalidIf/noneOf.  Here's why we chose the more counterintuitive approach:

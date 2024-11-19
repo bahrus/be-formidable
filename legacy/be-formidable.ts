@@ -23,14 +23,14 @@ export class BeFormidable  extends BE<AP, Actions, HTMLFormElement> implements A
         const {evalInvalidIf} = await import('../evalInvalidIf.js');
         enhancedElement.checkValidity = () => {
             if(!this.#originalCheckValidity()){
-                self.objections = ['']; //TODO:  Gather all the invalid messages
+                self.invalidClassesToApply = ['']; //TODO:  Gather all the invalid messages
                 self.isValid = false;
                 return false;
             }
             const messages = evalInvalidIf(self, enhancedElement);
             const valid = messages.length === 0;
             this.markStatus(enhancedElement, valid);
-            self.objections = messages;
+            self.invalidClassesToApply = messages;
             self.isValid = valid;
             return valid;
         }

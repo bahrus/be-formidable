@@ -26,12 +26,16 @@ class BeFormidable extends BE {
         propInfo: {
             ...propInfo,
             invalidIf: {},
-            isValid: {}
+            isValid: {},
+            invalidClassesToApply: {},
+            invalidClassesToRemove: {},
         },
         compacts:{
             //when_checkValidityOn_changes_invoke_hydrate: 0,
             when_isValid_changes_invoke_markStatus: 0,
             when_updateCnt_changes_invoke_checkValidity: 0,
+            when_invalidClassesToApply_changes_invoke_applyInvalidClsses: 0,
+            when_invalidClassesToRemove_changes_invoke_removeInvalidClasses: 0,
         },
         actions: {
             hydrate:{
@@ -79,14 +83,16 @@ class BeFormidable extends BE {
             this.#originalCheckValidity = checkValidity.bind(enhancedElement);
             enhancedElement.checkValidity = () => {
                 if(!this.#originalCheckValidity()){
-                    self.objections = ['']; //TODO:  Gather all the invalid messages
+                    self.invalidClassesToApply = ['']; //TODO:  Gather all the invalid messages
                     self.isValid = false;
                     return false;
                 }
                 
-                const objections = evalInvalidIf(self);
-                const valid = objections.length === 0;
-                self.objections = objections;
+                const info = evalInvalidIf(self);
+                const {activeInvalidCssClasses, inactiveInvalidCssClasses} = info;
+                const valid = activeInvalidCssClasses.length === 0;
+                self.invalidClassesToApply = activeInvalidCssClasses;
+                self.invalidClassesToRemove = inactiveInvalidCssClasses;
                 self.isValid = valid;
                 return valid;
             }
@@ -139,6 +145,27 @@ class BeFormidable extends BE {
     #disconnect(){
         if(this.#abortController !== undefined){
             this.#abortController.abort();
+        }
+    }
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    applyInvalidClsses(self){
+        const {invalidClassesToApply, enhancedElement} = self;
+        for(const c of invalidClassesToApply){
+            enhancedElement.classList.add(c);
+        }
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    removeInvalidClasses(self){
+        const {invalidClassesToRemove, enhancedElement} = self;
+        for(const c of invalidClassesToRemove){
+            enhancedElement.classList.remove(c);
         }
     }
 }

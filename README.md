@@ -42,11 +42,11 @@ It is easy to define a custom, (shorter) name for less formal environments.  *be
     "invalidIf":[
         {
             "noneOf": ["@url", "@file"],
-            "instructions": "Please Select a url or a file",
-            "invalidMessage": "No url or file selected"
+            "invalidCssClass": "no-url-or-file-selected"
         }
     ]
 }'>
+    <div class=instructions>Please Select a url or a file</div>
     <label>
         URL:
         <input name=url id=url type=url>
@@ -87,11 +87,13 @@ To specify an alternative property to check:
     "invalidIf":[
         {
             "noneOf": ["@keysInPocket.checked", "@havePhone.checked"],
-            "instructions": "Please take your keys, or at least a phone to call a locksmith.",
-            "invalidMessage": "Not ready to go out."
+            "invalidCssClass": "not-ready-to-go-out"
         }
     ]
 }'>
+    <div class=instructions>
+        Please take your keys, or at least a phone to call a locksmith.
+    </div>
     <label>
         <input name=keysInPocket type=checkbox>
         I have keys in my pocket
@@ -127,7 +129,7 @@ So this syntax is not compatible with form elements that use "." in the name.  I
                  }
             ],
             "instructions": "Please take your keys, or at least a phone to call for a locksmith.",
-            "invalidMessage": "Not ready to go out."
+            "invalidCssClass": "Not ready to go out."
         }
     ]
 }'>
@@ -226,7 +228,7 @@ NotEquals
 ## Side effect of calling checkValidity()
 
 
-"objections" is an array of strings that is stored at location formElement.beEnhanced.beFormidable.objections.  It lists validation errors.  
+"invalidClassesToApply" is an array of strings that is stored at location formElement.beEnhanced.beFormidable.invalidClassesToApply.  It lists validation errors.  
 
 ## Specify to monitor for certain events.
 

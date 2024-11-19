@@ -8,9 +8,10 @@
  */
 export function evalInvalidIf(self) {
     const {invalidIf, enhancedElement} = self;
-    const messages = [];
+    const activeInvalidCssClasses = [];
+    const inactiveInvalidCssClasses = [];
     for (const criteria of invalidIf) {
-        const { noneOf, } = criteria;
+        const { noneOf, invalidCssClass} = criteria;
         if (noneOf === undefined)
             continue; // support other rules in the future
         const noneOfLookup = {};
@@ -121,9 +122,13 @@ export function evalInvalidIf(self) {
             }
         }
         if (!found) {
-            const { invalidMessage, instructions } = criteria;
-            messages.push(invalidMessage || instructions || 'invalid');
+            activeInvalidCssClasses.push(invalidCssClass || 'invalid');
+        }else{
+            inactiveInvalidCssClasses.push(invalidCssClass || 'invalid');
         }
     }
-    return messages;
+    return {
+        activeInvalidCssClasses,
+        inactiveInvalidCssClasses
+    };
 }

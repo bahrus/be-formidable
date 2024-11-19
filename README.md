@@ -29,13 +29,11 @@ Add additional validations on the form element, beyond those that can be specifi
 </form>
 ```
 
-Attaching this enhancement / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying a class on the form element, as well as posting messages in a few places.
-
-The markup above does not, however, *automatically call* checkValidity.  To specify invoking checkValidity() during certain events, skip down several sections below.
+Attaching this enhancement / behavior results in overriding the checkValidity() method of the form element.  Calls to checkValidity has the added side-effect of modifying css classes on the form element. If the validations fail, css class "invalid" is added to the form element.  Otherwise "valid" is added.  In addition, if the "invalidCssClass" property is specified, it will get applied to the form element, or removed, depending on the validation.
 
 ## Shorter, alternative names
 
-It is easy to define a custom, (shorter) name for less formal environments.  *be-formidable* is the canonical name, but by referencing [an alternative registration file](https://github.com/bahrus/be-formidable/blob/baseline/%F0%9F%A5%B7%F0%9F%8F%BE.js) we can use:
+It is easy to define a custom, (shorter) name for less formal environments.  *be-formidable* is the canonical name, but by referencing [an alternative registration file](https://github.com/bahrus/be-formidable/blob/baseline/%F0%9F%A5%B7%F0%9F%8F%BE.js) we can use, for example:
 
 ```html
 <form 🥷🏾='{
@@ -74,7 +72,7 @@ And in practice, it is also quite ergonomic to edit these types of attributes in
 2.  [xtal-editor](https://github.com/bahrus/xtal-editor)
 3.  [cotus](https://github.com/bahrus/cotus)
 
-## Specifying property to check for truthiness
+## Specifying property to check for truthiness [TODO]
 
 The specifier for which elements to monitor follows the [DSS syntax](https://github.com/bahrus/trans-render/wiki/VIII.--Directed-Scoped-Specifiers-(DSS)).
 
@@ -308,7 +306,7 @@ Any web server that serves static files will do but...
 4.  Open command window to folder where you cloned this repo.
 5.  > npm install
 6.  > npm run serve
-7.  Open http://localhost:3030/demo in a modern browser.
+7.  Open http://localhost:8000/demo in a modern browser.
 
 ## Importing in ES Modules:
 

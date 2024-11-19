@@ -31,6 +31,7 @@ class BeFormidable extends BE {
         compacts:{
             //when_checkValidityOn_changes_invoke_hydrate: 0,
             when_isValid_changes_invoke_markStatus: 0,
+            when_updateCnt_changes_invoke_checkValidity: 0,
         },
         actions: {
             hydrate:{
@@ -95,6 +96,15 @@ class BeFormidable extends BE {
         return /** @type {PAP} */({
             resolved: true
         });
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    checkValidity(self){
+        const {enhancedElement} = self;
+        enhancedElement.checkValidity();
     }
 
     /**
